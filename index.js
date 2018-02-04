@@ -6,15 +6,16 @@ var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
 
 app.get('/', function(req, res) {
   console.log('home');
-  getGooglePlaces(res);
+  getGooglePlaces(res, '37.870921,-122.259079', 'restaurant');
 });
 
 app.listen(port, function() {
   console.log('listening on: ' + port);
 });
 
-function getGooglePlaces(res) {
-  https.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&location=37.870921,-122.259079&radius=500', function(resp) {
+function getGooglePlaces(res, place, type) {
+  var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&location=' + place + '&radius=500&type=' + type
+  https.get(url, function(resp) {
     var data = '';
     
     // A chunk of data has been recieved.
