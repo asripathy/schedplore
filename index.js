@@ -6,7 +6,7 @@ var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
 
 app.get('/', function(req, res) {
   console.log('home');
-  getPlaces(res, '37.870921,-122.259079', 500, 'restaurant');
+  getPlaces('37.870921,-122.259079', 500, 'restaurant');
   getLatLng('San Francisco');
 });
 
@@ -36,12 +36,12 @@ function getLatLng(city) {
 }
 
 // wrapper function for getGooglePlaces
-function getPlaces(res, location, radius, type) {
-  getGooglePlaces(res, location, radius, type);
+function getPlaces(location, radius, type) {
+  getGooglePlaces(location, radius, type);
 }
 
 // returns a list of places objects
-function getGooglePlaces(res, location, radius, type) {
+function getGooglePlaces(location, radius, type) {
   var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&location=' + location + '&radius=' + radius + '&type=' + type;
   https.get(url, function(resp) {
     var data = '';
@@ -63,12 +63,10 @@ function getGooglePlaces(res, location, radius, type) {
         places.push(place);
       }
 
-      res.send(places);
+      console.log(places);
     });
     
     }).on("error", function(err) {
       console.log("Error: " + err.message);
     });
 }
-
-// Store name, lat-long, rating, address
