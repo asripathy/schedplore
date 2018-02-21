@@ -7,7 +7,6 @@ var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
 app.get('/', function(req, res) {
   console.log('home');
   getPlaces(res, 'San Jose', 500, 'restaurant');
-  // getLatLng('San Francisco');
 });
 
 app.listen(port, function() {
@@ -51,7 +50,7 @@ function getPlaces(res, city, radius, type) {
 
 // returns a list of places objects
 function getGooglePlaces(res, location, radius, type) {
-  var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&location=' + location + '&radius=' + radius + '&type=' + type
+  var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&location=' + location + '&radius=' + radius + '&type=' + type;
   https.get(url, function(resp) {
     var data = '';
 
@@ -60,12 +59,22 @@ function getGooglePlaces(res, location, radius, type) {
     });
 
     resp.on('end', function() {
-      res.send(JSON.parse(data));
+      results = JSON.parse(data)['results'];
+      var places = [];
+      for (var i = 0; i < results.length; i++) {
+        var result = results[i];
+        var place = {};
+        place['place_id'] = result['place_id'];
+        place['name'] = result['name'];
+        place['rating'] = result['rating'];
+        place['latlng'] = result['geometry']['location']['lat'] + ',' + result['geometry']['location']['lng'];
+        places.push(place);
+      }
+
+      res.send(places);
     });
 
     }).on("error", function(err) {
       console.log("Error: " + err.message);
     });
 }
-
-// Store name, lat-long, rating, address
