@@ -6,25 +6,13 @@ var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
 
 app.get('/', function(req, res) {
   console.log('home');
-  getPlaces(res, 'Los Angeles', 500, 'restaurant');
+  getPlaces(res, 'San Jose', 500, 'restaurant');
   // getLatLng('San Francisco');
 });
 
 app.listen(port, function() {
   console.log('listening on: ' + port);
 });
-
-function extractLatLng(data){
-  console.log(data);
-  if(data['status'] != 'OK'){
-    //zero results handling
-  }
-  else{
-    latlng = String(data['results'][0].geometry.location.lat) + ','+ String(data['results'][0].geometry.location.lng);
-    return latlng;
-  }
-}
-
 
 // converts city to lat,lng string
 function getLatLng(city, callback) {
@@ -37,7 +25,15 @@ function getLatLng(city, callback) {
     });
 
     resp.on('end', function() {
-      callback(extractLatLng(JSON.parse(data)));
+      data = JSON.parse(data);
+      if(data['status'] != 'OK'){
+        console.log("ERROR: No Results Found");
+        //zero results handling
+      }
+      else{
+        latlng = data['results'][0].geometry.location.lat + ','+ data['results'][0].geometry.location.lng;
+        callback(latlng);
+      }
     });
 
     }).on("error", function(err) {
