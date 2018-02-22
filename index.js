@@ -63,11 +63,14 @@ function getGooglePlaces(res, location, radius, type) {
       var places = [];
       for (var i = 0; i < results.length; i++) {
         var result = results[i];
+        console.log(result);
         var place = {};
         place['place_id'] = result['place_id'];
         place['name'] = result['name'];
+        place['address'] = result['vicinity'];
         place['rating'] = result['rating'];
-        place['latlng'] = result['geometry']['location']['lat'] + ',' + result['geometry']['location']['lng'];
+        place['lat'] = result['geometry']['location']['lat'];
+        place['lng'] = result['geometry']['location']['lng'];
         places.push(place);
       }
 
