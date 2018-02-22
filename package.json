@@ -21,6 +21,7 @@
   "dependencies": {
     "express": "^4.16.2",
     "https": "~1.0.0",
+    "pg": "^7.4.1",
     "pg-format": "^1.0.4"
   }
 }
