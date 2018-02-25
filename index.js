@@ -1,7 +1,7 @@
 var https = require('https')
 var express = require('express');
 var pg = require('pg');
-var pguser = 'admin';
+var pguser = 'postgres';
 var pgdb = 'schedplore';
 var app = express();
 var port = process.env.PORT || 3000;
