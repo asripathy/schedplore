@@ -1,7 +1,7 @@
 var https = require('https')
 var express = require('express');
 var pg = require('pg');
-var pguser = 'user';
+var pguser = 'admin';
 var pgdb = 'schedplore';
 var app = express();
 var port = process.env.PORT || 3000;
@@ -29,11 +29,11 @@ var myClient
 
 pool.connect(function (err, client, done) {
   if (err) console.log(err)
-  app.listen(3000, function () {
+  app.listen(3001, function () {
     console.log('listening on 3000')
   })
   myClient = client
-  var query = format('SELECT * from place;')
+  var query = 'SELECT * from place;'
   myClient.query(query, function (err, result) {
     if (err) {
       console.log(err)
