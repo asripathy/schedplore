@@ -7,6 +7,38 @@ var app = express();
 var port = process.env.PORT || 3000;
 var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
 
+const place = require('./db/place.js');
+
+//Sets up DB connection with Sequelize
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize(pgdb, pguser, 'password', {
+  host: 'localhost',
+  dialect: 'postgres',
+
+  pool: {
+    max: 10,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
+
+var Place = place(sequelize, Sequelize);
+Place.findAll().then(users => {
+  console.log(users)
+})
+
+
 app.get('/', function(req, res) {
   console.log('home');
   getPlaces(res, 'San Jose', 500, 'restaurant');
@@ -16,33 +48,9 @@ app.listen(port, function() {
   console.log('listening on: ' + port);
 });
 
-
-var config = {
-  user: pguser, // name of the user account
-  database: pgdb, // name of the database
-  max: 10, // max number of clients in the pool
-  idleTimeoutMillis: 30000 // how long a client is allowed to remain idle before being closed
-}
-
-var pool = new pg.Pool(config)
-var myClient
-
-pool.connect(function (err, client, done) {
-  if (err) console.log(err)
-  app.listen(3001, function () {
-    console.log('listening on 3000')
-  })
-  myClient = client
-  var query = 'SELECT * from place;'
-  myClient.query(query, function (err, result) {
-    if (err) {
-      console.log(err)
-    }
-    console.log(result.rows[0])
-  })
-})
-
-
+// place.findPlaces((places) =>{
+//   console.log(places);
+// });
 
 // converts city to lat,lng string
 function getLatLng(city, callback) {
