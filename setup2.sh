@@ -1,5 +1,7 @@
 #!/bin/bash
-
+# sudo su -
+# update-rc.d postgresql enable
+# service postgresql start
 sudo -u postgres -H -- psql -d schedplore -c "DROP TABLE IF EXISTS city;
                       CREATE TABLE city(
                         id TEXT PRIMARY KEY not null,

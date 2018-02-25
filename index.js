@@ -1,5 +1,8 @@
 var https = require('https')
 var express = require('express');
+var pg = require('pg');
+var pguser = 'user';
+var pgdb = 'schedplore';
 var app = express();
 var port = process.env.PORT || 3000;
 var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
@@ -12,6 +15,34 @@ app.get('/', function(req, res) {
 app.listen(port, function() {
   console.log('listening on: ' + port);
 });
+
+
+var config = {
+  user: pguser, // name of the user account
+  database: pgdb, // name of the database
+  max: 10, // max number of clients in the pool
+  idleTimeoutMillis: 30000 // how long a client is allowed to remain idle before being closed
+}
+
+var pool = new pg.Pool(config)
+var myClient
+
+pool.connect(function (err, client, done) {
+  if (err) console.log(err)
+  app.listen(3000, function () {
+    console.log('listening on 3000')
+  })
+  myClient = client
+  var query = format('SELECT * from place;')
+  myClient.query(query, function (err, result) {
+    if (err) {
+      console.log(err)
+    }
+    console.log(result.rows[0])
+  })
+})
+
+
 
 // converts city to lat,lng string
 function getLatLng(city, callback) {
