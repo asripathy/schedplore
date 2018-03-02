@@ -116,7 +116,6 @@ function getGooglePlaces(res, city, location, radius, type) {
       }
 
       populateDB(city, places);
-      // res.send(places);
     });
 
     }).on("error", function(err) {
