@@ -8,6 +8,7 @@ var port = process.env.PORT || 3000;
 var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
 
 const place = require('./db/place.js');
+const city = require('./db/city.js');
 
 //Sets up DB connection with Sequelize
 const Sequelize = require('sequelize');
@@ -34,8 +35,13 @@ sequelize
 
 
 var Place = place(sequelize, Sequelize);
-Place.findAll().then(users => {
-  console.log(users)
+Place.findAll().then(places => {
+  console.log(places)
+})
+
+var City = city(sequelize, Sequelize);
+City.findAll().then(cities => {
+  console.log(cities);
 })
 
 
