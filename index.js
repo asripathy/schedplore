@@ -1,48 +1,48 @@
 var https = require('https')
 var express = require('express');
-var pg = require('pg');
-var pguser = 'postgres';
-var pgdb = 'schedplore';
 var app = express();
 var port = process.env.PORT || 3000;
 var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
 
 const place = require('./db/place.js');
 const city = require('./db/city.js');
-
-//Sets up DB connection with Sequelize
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize(pgdb, pguser, 'password', {
-  host: 'localhost',
-  dialect: 'postgres',
-
-  pool: {
-    max: 10,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
-
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
-
+const startup = require('./db/startup.js');
+const Sequelize = startup.Sequelize;
+const sequelize = startup.sequelize;
 
 var Place = place(sequelize, Sequelize);
-Place.findAll().then(places => {
-  console.log(places)
-})
+// Place.getPlaces(function(places) {
+//   console.log(places);
+// });
+
+// Place.getPlace('456', function(place) {
+//   console.log(place);
+// });
+
+// Place.addPlace('456', 'berkeley', 3.0, 'durant ave.', 122.03, -33.2, function(place) {
+//   console.log(place);
+// });
+
+// Place.updatePlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
+//   console.log(rowsUpdated);
+// });
 
 var City = city(sequelize, Sequelize);
-City.findAll().then(cities => {
-  console.log(cities);
-})
+// City.getCities(function(cities) {
+//   console.log(cities);
+// });
+
+// City.getCity('san fran', function(city) {
+//   console.log(city);
+// });
+
+// City.addCity('berkeley', ['456'], function(city) {
+//   console.log(city);
+// });
+
+// City.updateCity('berkeley', ['666'], function(rowsUpdated) {
+//   console.log(rowsUpdated);
+// });
 
 
 app.get('/', function(req, res) {

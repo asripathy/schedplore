@@ -1,5 +1,5 @@
 module.exports = function(sequelize, Sequelize) {
-  return sequelize.define('place', {
+  var place = sequelize.define('place', {
     id: {
       type: Sequelize.TEXT,
       primaryKey: true
@@ -22,5 +22,57 @@ module.exports = function(sequelize, Sequelize) {
   }, {
     timestamps: false,
     freezeTableName: true
-  })
+  });
+
+  place.getPlaces = function(callback) {
+    place.findAll().then(places => {
+      if (callback)
+        callback(places);
+    });
+  };
+
+  place.getPlace = function(id, callback) {
+    place.findById(id).then(foundPlace => {
+      if (callback)
+        callback(foundPlace);
+    });
+  }
+
+  place.addPlace = function(id, name, rating, address, lat, lng, callback) {
+    var options = {
+      id: id,
+      name: name,
+      rating: rating,
+      address: address,
+      lat: lat,
+      lng: lng
+    };
+
+    place.create(options).then(newPlace => {
+      if (callback)
+        callback(newPlace);
+    }).catch(function(err) {
+      console.log(err);
+    });
+  };
+
+  place.updatePlace = function(id, name, rating, address, lat, lng, callback) {
+    var options = {
+      id: id,
+      name: name,
+      rating: rating,
+      address: address,
+      lat: lat,
+      lng: lng
+    };
+
+    place.update(options, {where: {id: id}}).then(numRowsUpdated => {
+      if (callback)
+        callback(numRowsUpdated);
+    }).catch(function(err) {
+      console.log(err);
+    });
+  };
+
+  return place;
 };
