@@ -1,6 +1,6 @@
 #!/bin/bash
 
-psql -d schedplore -c "DROP TABLE IF EXISTS city;
+psql -d schedplore postgres -c "DROP TABLE IF EXISTS city;
                       CREATE TABLE city(
                         id TEXT PRIMARY KEY not null,
                         place_ids TEXT []
