@@ -54,5 +54,19 @@ module.exports = function(sequelize, Sequelize) {
     });
   };
 
+  city.upsertCity = function(id, place_ids, callback) {
+    var options = {
+      id: id,
+      place_ids: place_ids
+    };
+
+    city.upsert(options, {where: {id: id}}).then(created => {
+      if (callback)
+        callback(created);
+    }).catch(function(err) {
+      console.log(err);
+    });
+  };
+
   return city;
 };

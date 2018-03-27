@@ -128,7 +128,7 @@ function populateDB(city, places) {
   for (let i = 0; i < places.length; i++) {
     var place = places[i];
     place_ids.push(place.place_id);
-    Place.addPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng);
+    Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng);
   }
-  City.addCity(city, place_ids);
+  City.upsertCity(city, place_ids);
 }
