@@ -24,6 +24,9 @@ module.exports = function(sequelize, Sequelize) {
     freezeTableName: true
   });
 
+  // Place.getPlaces(function(places) {
+  //   console.log(places);
+  // });
   place.getPlaces = function(callback) {
     place.findAll().then(places => {
       if (callback)
@@ -31,6 +34,9 @@ module.exports = function(sequelize, Sequelize) {
     });
   };
 
+  // Place.getPlace('456', function(place) {
+  //   console.log(place);
+  // });
   place.getPlace = function(id, callback) {
     place.findById(id).then(foundPlace => {
       if (callback)
@@ -38,6 +44,9 @@ module.exports = function(sequelize, Sequelize) {
     });
   }
 
+  // Place.addPlace('456', 'berkeley', 3.0, 'durant ave.', 122.03, -33.2, function(place) {
+  //   console.log(place);
+  // });
   place.addPlace = function(id, name, rating, address, lat, lng, callback) {
     var options = {
       id: id,
@@ -56,6 +65,9 @@ module.exports = function(sequelize, Sequelize) {
     });
   };
 
+  // Place.updatePlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
+  //   console.log(rowsUpdated);
+  // });
   place.updatePlace = function(id, name, rating, address, lat, lng, callback) {
     var options = {
       id: id,
@@ -74,6 +86,9 @@ module.exports = function(sequelize, Sequelize) {
     });
   };
 
+  // Place.upsertPlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
+  //   console.log(rowsUpdated);
+  // });
   place.upsertPlace = function(id, name, rating, address, lat, lng, callback) {
     var options = {
       id: id,
