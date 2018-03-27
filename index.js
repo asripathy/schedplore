@@ -12,39 +12,7 @@ const sequelize = startup.sequelize;
 
 
 var Place = place(sequelize, Sequelize);
-// Place.getPlaces(function(places) {
-//   console.log(places);
-// });
-
-// Place.getPlace('456', function(place) {
-//   console.log(place);
-// });
-
-// Place.addPlace('456', 'berkeley', 3.0, 'durant ave.', 122.03, -33.2, function(place) {
-//   console.log(place);
-// });
-
-// Place.updatePlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
-//   console.log(rowsUpdated);
-// });
-
 var City = city(sequelize, Sequelize);
-// City.getCities(function(cities) {
-//   console.log(cities);
-// });
-
-// City.getCity('san fran', function(city) {
-//   console.log(city);
-// });
-
-// City.addCity('berkeley', ['456'], function(city) {
-//   console.log(city);
-// });
-
-// City.updateCity('berkeley', ['666'], function(rowsUpdated) {
-//   console.log(rowsUpdated);
-// });
-
 
 app.get('/', function(req, res) {
   getPlaces(res, 'San Jose', 500, 'restaurant');
