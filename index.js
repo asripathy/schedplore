@@ -82,8 +82,9 @@ function getGooglePlaces(res, city, location, radius, type) {
         place['lng'] = result['geometry']['location']['lng'];
         places.push(place);
       }
-
-      populateDB(city, places);
+      getPlaceHours(places, function(newPlaces){
+        populateDB(city, newPlaces);
+      })
     });
 
     }).on("error", function(err) {
@@ -91,12 +92,79 @@ function getGooglePlaces(res, city, location, radius, type) {
     });
 }
 
+/*Testing Function*/
+function prettyPrintHours(hours){
+  for(var i = 0; i < 7; i++){
+    console.log("lenn: " + hours[i].length);
+    console.log("Day " + i + ": ");
+    console.log(hours[i]);
+  }
+}
+
+function parseHours(periods, callback){
+    let hours = Array(7).fill().map(() => Array(24).fill(0));
+    for(var i = 0; i < periods.length; i++){
+      var close = periods[i]['close'];
+      var open = periods[i]['open'];
+      var startDay = open['day'];
+      // console.log("Start Day: "+ startDay);
+      var startTime = parseInt(open['time'].substring(0, 2));
+      var closeDay = close['day'];
+      var closeTime = parseInt(close['time'].substring(0, 2));
+      if(startDay != closeDay){
+        for(var hour = startTime; hour < 24; hour++){
+          hours[startDay][hour] = 1;
+        }
+        for(var hour = 0; hour < closeTime; hour++){
+          hours[closeDay][hour] = 1;
+        }
+      }
+      else{
+        for(var hour = startTime; hour < closeTime; hour++){
+          hours[startDay][hour] = 1;
+        }
+      }
+    }
+    callback(hours);
+}
+
+function parseTime(time){
+  var hour = parseInt(time.substring(0, 3));
+  return hour;
+}
+
+//Gets hours for place given place_id
+function getPlaceHours(places, callback){
+  newPlaces = [];
+  places.forEach(function(place, i){
+    var url = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&placeid=" + place['place_id'];
+    https.get(url, function(resp){
+      var data = '';
+
+      resp.on('data', function(chunk) {
+        data += chunk;
+      });
+
+      resp.on('end', function() {
+        hours = JSON.parse(data);
+        parseHours(hours['result']['opening_hours']['periods'], function(parsedHours){
+          place['hours'] = parsedHours;
+          newPlaces.push(place);
+          if (newPlaces.length == places.length) {
+            callback(newPlaces);
+          }
+        });
+      })
+    })
+  });
+}
+
 function populateDB(city, places) {
   place_ids = [];
   for (let i = 0; i < places.length; i++) {
     var place = places[i];
     place_ids.push(place.place_id);
-    Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng);
+    Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours);
   }
   City.upsertCity(city, place_ids);
 }

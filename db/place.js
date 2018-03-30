@@ -18,6 +18,9 @@ module.exports = function(sequelize, Sequelize) {
     },
     lng: {
       type: Sequelize.DOUBLE
+    },
+    hours: {
+      type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.INTEGER))
     }
   }, {
     timestamps: false,
@@ -47,14 +50,15 @@ module.exports = function(sequelize, Sequelize) {
   // Place.addPlace('456', 'berkeley', 3.0, 'durant ave.', 122.03, -33.2, function(place) {
   //   console.log(place);
   // });
-  place.addPlace = function(id, name, rating, address, lat, lng, callback) {
+  place.addPlace = function(id, name, rating, address, lat, lng, hours, callback) {
     var options = {
       id: id,
       name: name,
       rating: rating,
       address: address,
       lat: lat,
-      lng: lng
+      lng: lng,
+      hours: hours
     };
 
     place.create(options).then(newPlace => {
@@ -68,14 +72,15 @@ module.exports = function(sequelize, Sequelize) {
   // Place.updatePlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
   //   console.log(rowsUpdated);
   // });
-  place.updatePlace = function(id, name, rating, address, lat, lng, callback) {
+  place.updatePlace = function(id, name, rating, address, lat, lng, hours, callback) {
     var options = {
       id: id,
       name: name,
       rating: rating,
       address: address,
       lat: lat,
-      lng: lng
+      lng: lng,
+      hours: hours
     };
 
     place.update(options, {where: {id: id}}).then(numRowsUpdated => {
@@ -89,14 +94,15 @@ module.exports = function(sequelize, Sequelize) {
   // Place.upsertPlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
   //   console.log(rowsUpdated);
   // });
-  place.upsertPlace = function(id, name, rating, address, lat, lng, callback) {
+  place.upsertPlace = function(id, name, rating, address, lat, lng, hours, callback) {
     var options = {
       id: id,
       name: name,
       rating: rating,
       address: address,
       lat: lat,
-      lng: lng
+      lng: lng,
+      hours: hours
     };
 
     place.upsert(options, {where: {id: id}}).then(created => {
