@@ -80,16 +80,11 @@ function getGooglePlaces(res, city, location, radius, type) {
         place['address'] = result['vicinity'];
         place['lat'] = result['geometry']['location']['lat'];
         place['lng'] = result['geometry']['location']['lng'];
-        getPlaceHours(result['place_id'], function(hours){
-           parseHours(hours['result']['opening_hours']['periods'], function(hours){
-             place['hours'] = hours;
-             places.push(place);
-             prettyPrintHours(hours);
-           })
-        });
+        places.push(place);
       }
-
-      populateDB(city, places);
+      getPlaceHours(places, function(newPlaces){
+        populateDB(city, newPlaces);
+      })
     });
 
     }).on("error", function(err) {
@@ -115,9 +110,7 @@ function parseHours(periods, callback){
       // console.log("Start Day: "+ startDay);
       var startTime = parseInt(open['time'].substring(0, 2));
       var closeDay = close['day'];
-      console.log("Start time: "+ open['time']);
       var closeTime = parseInt(close['time'].substring(0, 2));
-      console.log("end time: "+ close['time']);
       if(startDay != closeDay){
         for(var hour = startTime; hour < 24; hour++){
           hours[startDay][hour] = 1;
@@ -141,20 +134,29 @@ function parseTime(time){
 }
 
 //Gets hours for place given place_id
-function getPlaceHours(place_id, callback){
-  var url = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&placeid=" + place_id;
-  https.get(url, function(resp){
-    var data = '';
+function getPlaceHours(places, callback){
+  newPlaces = [];
+  places.forEach(function(place, i){
+    var url = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&placeid=" + place['place_id'];
+    https.get(url, function(resp){
+      var data = '';
 
-    resp.on('data', function(chunk) {
-      data += chunk;
-    });
+      resp.on('data', function(chunk) {
+        data += chunk;
+      });
 
-    resp.on('end', function() {
-      results = JSON.parse(data);
-      callback(results);
-    });
-  })
+      resp.on('end', function() {
+        hours = JSON.parse(data);
+        parseHours(hours['result']['opening_hours']['periods'], function(parsedHours){
+          place['hours'] = parsedHours;
+          newPlaces.push(place);
+          if (newPlaces.length == places.length) {
+            callback(newPlaces);
+          }
+        });
+      })
+    })
+  });
 }
 
 function populateDB(city, places) {
@@ -164,5 +166,5 @@ function populateDB(city, places) {
     place_ids.push(place.place_id);
     Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours);
   }
-  //City.upsertCity(city, place_ids);
+  City.upsertCity(city, place_ids);
 }

@@ -20,7 +20,7 @@ module.exports = function(sequelize, Sequelize) {
       type: Sequelize.DOUBLE
     },
     hours: {
-      type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.TINYINT))
+      type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.INTEGER))
     }
   }, {
     timestamps: false,
