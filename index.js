@@ -13,9 +13,14 @@ const sequelize = startup.sequelize;
 
 var Place = place(sequelize, Sequelize);
 var City = city(sequelize, Sequelize);
+var schedule = require('./schedule.js');
 
 app.get('/', function(req, res) {
-  getPlaces(res, 'San Jose', 500, 'restaurant');
+  // getPlaces(res, 'San Jose', 500, 'restaurant');
+  // TODO make sure this gets called at appropriate time
+  schedule.createScheduleOptions('San Jose', function(sched) {
+    res.send(sched);
+  });
 });
 
 app.listen(port, function() {
