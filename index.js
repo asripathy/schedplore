@@ -18,8 +18,22 @@ var schedule = require('./schedule.js');
 app.get('/', function(req, res) {
   // getPlaces(res, 'San Jose', 500, 'restaurant');
   // TODO make sure this gets called at appropriate time
-  schedule.createScheduleOptions('San Jose', function(sched) {
-    res.send(sched);
+  // schedule.createScheduleOptions('San Jose', function(sched) {
+  //   res.send(sched);
+  // });
+});
+
+app.get('/place/:place', function(req, res) {
+  var place = req.params.place;
+  City.getCity(place, function(city) {
+    console.log(city);
+    if (!city) {
+      getPlaces(res, place, 500, 'restaurant');
+    }
+    schedule.createScheduleOptions(place, function(sched) {
+      console.log(sched);
+      res.send(sched);
+    });
   });
 });
 
