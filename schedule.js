@@ -42,6 +42,7 @@ module.exports = {
             }
         }
       }
+      callback(scheduleOptions);
     //   console.log(scheduleOptions);
     })
   }
