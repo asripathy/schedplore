@@ -30,6 +30,7 @@ module.exports = {
   // Layer 2: Hours
   // Layer 3: Place Objects
   createScheduleOptions: function(city, callback){
+    console.log(2);
     retrievePlaces(city, function(places){
       let scheduleOptions = Array(7).fill().map(() => Array(24).fill().map(() => Array()));
       for(var i = 0; i < places.length; i++){

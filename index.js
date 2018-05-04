@@ -28,12 +28,16 @@ app.get('/place/:place', function(req, res) {
   City.getCity(place, function(city) {
     console.log(city);
     if (!city) {
-      getPlaces(res, place, 500, 'restaurant');
+      getPlaces(res, place, 500, 'restaurant', () => {
+        schedule.createScheduleOptions(place, function(sched) {
+          res.send(sched);
+        });
+      });
+    } else {
+      schedule.createScheduleOptions(place, function(sched) {
+        res.send(sched);
+      });
     }
-    schedule.createScheduleOptions(place, function(sched) {
-      console.log(sched);
-      res.send(sched);
-    });
   });
 });
 
@@ -71,14 +75,14 @@ function getLatLng(city, callback) {
 }
 
 // wrapper function for getGooglePlaces
-function getPlaces(res, city, radius, type) {
+function getPlaces(res, city, radius, type, callback) {
   getLatLng(city, function(latlng) {
-    getGooglePlaces(res, city, latlng, radius, type);
+    getGooglePlaces(res, city, latlng, radius, type, callback);
   });
 }
 
 // returns a list of places objects
-function getGooglePlaces(res, city, location, radius, type) {
+function getGooglePlaces(res, city, location, radius, type, callback) {
   var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&location=' + location + '&radius=' + radius + '&type=' + type;
   https.get(url, function(resp) {
     var data = '';
@@ -101,8 +105,8 @@ function getGooglePlaces(res, city, location, radius, type) {
         place['lng'] = result['geometry']['location']['lng'];
         places.push(place);
       }
-      getPlaceHours(places, function(newPlaces){
-        populateDB(city, newPlaces);
+      getPlaceHours(places, function(newPlaces) {
+        populateDB(city, newPlaces, callback);
       })
     });
 
@@ -155,6 +159,7 @@ function parseTime(time){
 //Gets hours for place given place_id
 function getPlaceHours(places, callback){
   newPlaces = [];
+  original_places_len = places.length;
   places.forEach(function(place, i){
     var url = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&placeid=" + place['place_id'];
     https.get(url, function(resp){
@@ -166,24 +171,41 @@ function getPlaceHours(places, callback){
 
       resp.on('end', function() {
         hours = JSON.parse(data);
-        parseHours(hours['result']['opening_hours']['periods'], function(parsedHours){
-          place['hours'] = parsedHours;
-          newPlaces.push(place);
-          if (newPlaces.length == places.length) {
+
+        // only call parse hours if the place has hours
+        if (!hours['result']['opening_hours'] || !hours['result']['opening_hours']['periods']) {
+          original_places_len -= 1;
+          if (newPlaces.length == original_places_len) {
             callback(newPlaces);
           }
-        });
+        } else {
+          parseHours(hours['result']['opening_hours']['periods'], function(parsedHours){
+            place['hours'] = parsedHours;
+            newPlaces.push(place);
+            if (newPlaces.length == original_places_len) {
+              callback(newPlaces);
+            }
+          });
+        }
       })
     })
   });
 }
 
-function populateDB(city, places) {
+function populateDB(city, places, callback) {
+  console.log('in pop db');
   place_ids = [];
+  var promises = [];
   for (let i = 0; i < places.length; i++) {
     var place = places[i];
     place_ids.push(place.place_id);
-    Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours);
+    // Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours);
+    promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours));
   }
-  City.upsertCity(city, place_ids);
+  promises.push(City.upsertCityPromise(city, place_ids));
+
+  Promise.all(promises).then(() => {
+    console.log('done');
+    callback();
+  });
 }

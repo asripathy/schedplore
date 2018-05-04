@@ -88,5 +88,21 @@ module.exports = function(sequelize, Sequelize) {
     });
   };
 
+  city.upsertCityPromise = function(id, place_ids, callback) {
+    var options = {
+      id: id,
+      place_ids: place_ids
+    };
+
+    return new Promise(function(resolve, reject) {
+      city.upsert(options, {where: {id: id}}).then(created => {
+        resolve(created);
+      }).catch(function(err) {
+        reject(err);
+      });
+    });
+  };
+
+
   return city;
 };

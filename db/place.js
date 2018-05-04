@@ -113,5 +113,25 @@ module.exports = function(sequelize, Sequelize) {
     });
   };
 
+  place.upsertPlacePromise = function(id, name, rating, address, lat, lng, hours) {
+    var options = {
+      id: id,
+      name: name,
+      rating: rating,
+      address: address,
+      lat: lat,
+      lng: lng,
+      hours: hours
+    };
+
+    return new Promise(function(resolve, reject) {
+      place.upsert(options, {where: {id: id}}).then(created => {
+        resolve(created);
+      }).catch(function(err) {
+        reject(err);
+      });
+    })
+  };
+
   return place;
 };
