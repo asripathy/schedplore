@@ -1,4 +1,4 @@
-module.exports = function(sequelize, Sequelize) {
+module.exports = function (sequelize, Sequelize) {
   var place = sequelize.define('place', {
     id: {
       type: Sequelize.TEXT,
@@ -23,14 +23,14 @@ module.exports = function(sequelize, Sequelize) {
       type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.INTEGER))
     }
   }, {
-    timestamps: false,
-    freezeTableName: true
-  });
+      timestamps: false,
+      freezeTableName: true
+    });
 
   // Place.getPlaces(function(places) {
   //   console.log(places);
   // });
-  place.getPlaces = function(callback) {
+  place.getPlaces = function (callback) {
     place.findAll().then(places => {
       if (callback)
         callback(places);
@@ -40,7 +40,7 @@ module.exports = function(sequelize, Sequelize) {
   // Place.getPlace('456', function(place) {
   //   console.log(place);
   // });
-  place.getPlace = function(id, callback) {
+  place.getPlace = function (id, callback) {
     place.findById(id).then(foundPlace => {
       if (callback)
         callback(foundPlace);
@@ -50,7 +50,7 @@ module.exports = function(sequelize, Sequelize) {
   // Place.addPlace('456', 'berkeley', 3.0, 'durant ave.', 122.03, -33.2, function(place) {
   //   console.log(place);
   // });
-  place.addPlace = function(id, name, rating, address, lat, lng, hours, callback) {
+  place.addPlace = function (id, name, rating, address, lat, lng, hours, callback) {
     var options = {
       id: id,
       name: name,
@@ -64,7 +64,7 @@ module.exports = function(sequelize, Sequelize) {
     place.create(options).then(newPlace => {
       if (callback)
         callback(newPlace);
-    }).catch(function(err) {
+    }).catch(function (err) {
       console.log(err);
     });
   };
@@ -72,7 +72,7 @@ module.exports = function(sequelize, Sequelize) {
   // Place.updatePlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
   //   console.log(rowsUpdated);
   // });
-  place.updatePlace = function(id, name, rating, address, lat, lng, hours, callback) {
+  place.updatePlace = function (id, name, rating, address, lat, lng, hours, callback) {
     var options = {
       id: id,
       name: name,
@@ -83,10 +83,10 @@ module.exports = function(sequelize, Sequelize) {
       hours: hours
     };
 
-    place.update(options, {where: {id: id}}).then(numRowsUpdated => {
+    place.update(options, { where: { id: id } }).then(numRowsUpdated => {
       if (callback)
         callback(numRowsUpdated);
-    }).catch(function(err) {
+    }).catch(function (err) {
       console.log(err);
     });
   };
@@ -94,7 +94,7 @@ module.exports = function(sequelize, Sequelize) {
   // Place.upsertPlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
   //   console.log(rowsUpdated);
   // });
-  place.upsertPlace = function(id, name, rating, address, lat, lng, hours, callback) {
+  place.upsertPlace = function (id, name, rating, address, lat, lng, hours, callback) {
     var options = {
       id: id,
       name: name,
@@ -105,12 +105,32 @@ module.exports = function(sequelize, Sequelize) {
       hours: hours
     };
 
-    place.upsert(options, {where: {id: id}}).then(created => {
+    place.upsert(options, { where: { id: id } }).then(created => {
       if (callback)
         callback(created);
-    }).catch(function(err) {
+    }).catch(function (err) {
       console.log(err);
     });
+  };
+
+  place.upsertPlacePromise = function (id, name, rating, address, lat, lng, hours) {
+    var options = {
+      id: id,
+      name: name,
+      rating: rating,
+      address: address,
+      lat: lat,
+      lng: lng,
+      hours: hours
+    };
+
+    return new Promise(function (resolve, reject) {
+      place.upsert(options, { where: { id: id } }).then(created => {
+        resolve(created);
+      }).catch(function (err) {
+        reject(err);
+      });
+    })
   };
 
   return place;

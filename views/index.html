@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Schedplore</title>
+  </head>
+  <body>
+    <input type="text" id="city" placeholder="Enter City">
+    <button type="submit" onclick="searchCity()">Search</button>
+  </body>
+</html>
+
+<script>
+    function searchCity(){
+        location.href = "http://localhost:3000/place/" + document.getElementById("city").value;
+    }
+</script>
