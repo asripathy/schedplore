@@ -26,7 +26,6 @@ app.get('/', function(req, res) {
 app.get('/place/:place', function(req, res) {
   var place = req.params.place;
   City.getCity(place, function(city) {
-    console.log(city);
     if (!city) {
       getPlaces(res, place, 500, 'restaurant', () => {
         schedule.createScheduleOptions(place, function(sched) {
@@ -130,7 +129,6 @@ function parseHours(periods, callback){
       var close = periods[i]['close'];
       var open = periods[i]['open'];
       var startDay = open['day'];
-      // console.log("Start Day: "+ startDay);
       var startTime = parseInt(open['time'].substring(0, 2));
       var closeDay = close['day'];
       var closeTime = parseInt(close['time'].substring(0, 2));
@@ -193,7 +191,6 @@ function getPlaceHours(places, callback){
 }
 
 function populateDB(city, places, callback) {
-  console.log('in pop db');
   place_ids = [];
   var promises = [];
   for (let i = 0; i < places.length; i++) {
@@ -205,7 +202,6 @@ function populateDB(city, places, callback) {
   promises.push(City.upsertCityPromise(city, place_ids));
 
   Promise.all(promises).then(() => {
-    console.log('done');
     callback();
   });
 }
