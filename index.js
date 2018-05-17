@@ -1,14 +1,14 @@
 var https = require('https')
 var express = require('express');
 var app = express();
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5000;
 var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
 
 const place = require('./db/place.js');
 const city = require('./db/city.js');
 const startup = require('./db/startup.js');
 const Sequelize = startup.Sequelize;
-const sequelize = startup.sequelize;
+const sequelize = startup.sequelize; 
 
 
 var Place = place(sequelize, Sequelize);
