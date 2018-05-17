@@ -21,6 +21,7 @@ app.get('/', function (req, res) {
   // schedule.createScheduleOptions('San Jose', function(sched) {
   //   res.send(sched);
   // });
+  res.sendfile('./views/index.html');
 });
 
 app.get('/place/:place', function (req, res) {
