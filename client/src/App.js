@@ -3,6 +3,8 @@ import Script from 'react-load-script';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import logo from './logo.svg';
 import './App.css';
+import Hour from './Hour.js';
+import List from './List.js';
 
 class App extends Component {
   state = {
@@ -39,6 +41,7 @@ class App extends Component {
       .catch(error => console.error('Error', error))
   }
 
+  placeArr = ["Le Boulanger", "Quiznos", "Taco Bell"];
 
   render() {
     return (
@@ -82,6 +85,7 @@ class App extends Component {
           )}
         </PlacesAutocomplete>
         <button type="submit" onClick={this.callApi}>Search</button>
+        <List places={this.placeArr}/>
         <p> {this.state.response} </p>
       </div>
     );
