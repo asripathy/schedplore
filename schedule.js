@@ -31,19 +31,6 @@ module.exports = {
     // Layer 3: Place Objects
     createScheduleOptions: function (city, callback) {
         retrievePlaces(city, function (places) {
-            // let scheduleOptions = Array(7).fill().map(() => Array(24).fill().map(() => Array()));
-            // for (var i = 0; i < places.length; i++) {
-            //     let hours = places[i].hours;
-            //     for (var j = 0; j < hours.length; j++) {
-            //         for (var k = 0; k < hours[j].length; k++) {
-            //             if (hours[j][k]) {
-            //                 scheduleOptions[j][k].push(places[i]);
-            //             }
-            //         }
-            //     }
-            // }
-            // var places = this.props.places;
- 
             let scheduleOptions = [...Array(7)].map(e => Array(24));
     
             for (let day = 0; day < 7; day++) {
@@ -52,7 +39,12 @@ module.exports = {
                     places.map((place) => {
                         if (place.hours[day][hour] === "1") {
                             let newPlace = {};
-                            newPlace.
+                            newPlace.id = place.id;
+                            newPlace.name = place.name;
+                            newPlace.rating = place.rating;
+                            newPlace.address = place.address;
+                            newPlace.lat = place.lat;
+                            newPlace.lng = place.lng;                            
                             openPlaces.push(newPlace);
                         }
                     });
@@ -60,9 +52,6 @@ module.exports = {
                     scheduleOptions[day][hour] = openPlaces;
                 }
             }
-            console.log("Schedule: ");
-            console.log(JSON.stringify(scheduleOptions));
-            // console.dir(scheduleOptions, { depth: null }); 
             callback(scheduleOptions);
         })
     }
