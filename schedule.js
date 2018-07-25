@@ -31,17 +31,38 @@ module.exports = {
     // Layer 3: Place Objects
     createScheduleOptions: function (city, callback) {
         retrievePlaces(city, function (places) {
-            let scheduleOptions = Array(7).fill().map(() => Array(24).fill().map(() => Array()));
-            for (var i = 0; i < places.length; i++) {
-                let hours = places[i].hours;
-                for (var j = 0; j < hours.length; j++) {
-                    for (var k = 0; k < hours[j].length; k++) {
-                        if (hours[j][k]) {
-                            scheduleOptions[j][k].push(places[i]);
+            // let scheduleOptions = Array(7).fill().map(() => Array(24).fill().map(() => Array()));
+            // for (var i = 0; i < places.length; i++) {
+            //     let hours = places[i].hours;
+            //     for (var j = 0; j < hours.length; j++) {
+            //         for (var k = 0; k < hours[j].length; k++) {
+            //             if (hours[j][k]) {
+            //                 scheduleOptions[j][k].push(places[i]);
+            //             }
+            //         }
+            //     }
+            // }
+            // var places = this.props.places;
+ 
+            let scheduleOptions = [...Array(7)].map(e => Array(24));
+    
+            for (let day = 0; day < 7; day++) {
+                for (let hour = 0; hour < 24; hour++) {
+                    let openPlaces = [];
+                    places.map((place) => {
+                        if (place.hours[day][hour] === "1") {
+                            let newPlace = {};
+                            newPlace.
+                            openPlaces.push(newPlace);
                         }
-                    }
+                    });
+    
+                    scheduleOptions[day][hour] = openPlaces;
                 }
             }
+            console.log("Schedule: ");
+            console.log(JSON.stringify(scheduleOptions));
+            // console.dir(scheduleOptions, { depth: null }); 
             callback(scheduleOptions);
         })
     }
