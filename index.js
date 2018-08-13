@@ -2,7 +2,7 @@ var https = require('https')
 var express = require('express');
 var app = express();
 var port = process.env.PORT || 5000;
-var google_key = 'AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
+var google_key = 'AIzaSyDEh5eAnR2GzTJ03JdVgFbzsjzKj3BlFg8';
 
 const place = require('./db/place.js');
 const city = require('./db/city.js');
@@ -48,7 +48,7 @@ app.listen(port, function () {
 
 // converts city to lat,lng string
 function getLatLng(city, callback) {
-  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I';
+  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=' + google_key;
   https.get(url, function (resp) {
     var data = '';
 
@@ -83,7 +83,7 @@ function getPlaces(res, city, radius, type, callback) {
 
 // returns a list of places objects
 function getGooglePlaces(res, city, location, radius, type, callback) {
-  var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&location=' + location + '&radius=' + radius + '&type=' + type;
+  var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=' + google_key + '&location=' + location + '&radius=' + radius + '&type=' + type;
   https.get(url, function (resp) {
     var data = '';
 
@@ -160,7 +160,7 @@ function getPlaceHours(places, callback) {
   newPlaces = [];
   original_places_len = places.length;
   places.forEach(function (place, i) {
-    var url = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDEPGdDuGRpSFSlQ1tXy5EIAosKAtp8f5I&placeid=" + place['place_id'];
+    var url = "https://maps.googleapis.com/maps/api/place/details/json?key=" + google_key + "&placeid=" + place['place_id'];
     https.get(url, function (resp) {
       var data = '';
 
@@ -172,6 +172,7 @@ function getPlaceHours(places, callback) {
         hours = JSON.parse(data);
 
         // only call parse hours if the place has hours
+        console.log(hours)
         if (!hours['result']['opening_hours'] || !hours['result']['opening_hours']['periods']) {
           original_places_len -= 1;
           if (newPlaces.length == original_places_len) {

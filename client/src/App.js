@@ -23,6 +23,7 @@ class App extends Component {
     if(city){
       const response = await fetch('/place/' + city);
       const body = await response.json();
+      console.log(body);
 
       if (response.status !== 200) throw Error(body.message);
       this.setState({response: JSON.stringify(body)})
