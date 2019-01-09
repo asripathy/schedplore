@@ -5,6 +5,23 @@ import logo from './logo.svg';
 import './App.css';
 import Hour from './Hour.js';
 import List from './List.js';
+// TODO: move to calendar.js
+import BigCalendar from 'react-big-calendar';
+import moment from 'moment';
+
+
+BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
+
+const MyCalendar = props => (
+  <div>
+    <BigCalendar
+      events={[]}
+      startAccessor='2/20/2015'
+      endAccessor='2/28/2015'
+    />
+  </div>
+);
+
 
 class App extends Component {
   state = {
@@ -23,6 +40,7 @@ class App extends Component {
     if(city){
       const response = await fetch('/place/' + city);
       const body = await response.json();
+      console.log(body);
 
       if (response.status !== 200) throw Error(body.message);
       this.setState({response: JSON.stringify(body)})
@@ -52,6 +70,7 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+
         <PlacesAutocomplete
           value={this.state.address}
           onChange={this.handleChange}
@@ -83,8 +102,25 @@ class App extends Component {
             </div>
           )}
         </PlacesAutocomplete>
+
+        <BigCalendar
+          selectable
+          events={[]}
+          localizer={BigCalendar.momentLocalizer}
+          defaultView={BigCalendar.Views.WEEK}
+          scrollToTime={new Date(2015, 1, 1, 6)}
+          defaultDate={new Date(2015, 3, 12)}
+          onSelectEvent={event => alert(event.title)}
+          onSelectSlot={slotInfo =>
+            alert(
+              `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
+                `\nend: ${slotInfo.end.toLocaleString()}` +
+                `\naction: ${slotInfo.action}`
+            )
+          }
+        />
+
         <button type="submit" onClick={this.callApi}>Search</button>
-        <List places={this.placeArr}/>
         <p> {this.state.response} </p>
       </div>
     );
