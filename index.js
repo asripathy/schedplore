@@ -2,11 +2,7 @@ var https = require('https')
 var express = require('express');
 var app = express();
 var port = process.env.PORT || 5000;
-<<<<<<< HEAD
 var google_key = require('./api-key.json').key;
-=======
-var google_key = 'AIzaSyDEh5eAnR2GzTJ03JdVgFbzsjzKj3BlFg8';
->>>>>>> af01876cdc0a13b8e49c37707c8291fa5d1d1c1f
 
 const place = require('./db/place.js');
 const city = require('./db/city.js');
@@ -164,11 +160,7 @@ function getPlaceHours(places, callback) {
   newPlaces = [];
   original_places_len = places.length;
   places.forEach(function (place, i) {
-<<<<<<< HEAD
-    var url = "https://maps.googleapis.com/maps/api/place/details/json?key=" + google_key +  "&placeid=" + place['place_id'];
-=======
     var url = "https://maps.googleapis.com/maps/api/place/details/json?key=" + google_key + "&placeid=" + place['place_id'];
->>>>>>> af01876cdc0a13b8e49c37707c8291fa5d1d1c1f
     https.get(url, function (resp) {
       var data = '';
 
