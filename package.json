@@ -25,9 +25,11 @@
     "create-react-app": "^1.5.2",
     "express": "^4.16.2",
     "https": "~1.0.0",
+    "moment": "^2.23.0",
     "nodemon": "^1.17.4",
     "pg": "^7.4.1",
     "pg-format": "^1.0.4",
+    "react-big-calendar": "^0.20.3",
     "react-places-autocomplete": "^7.1.1",
     "sequelize": "^4.33.4"
   },

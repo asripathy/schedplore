@@ -5,6 +5,11 @@ import logo from './logo.svg';
 import './App.css';
 import Hour from './Hour.js';
 import List from './List.js';
+import BigCalendar from 'react-big-calendar'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+import moment from 'moment'
+
+const localizer = BigCalendar.momentLocalizer(moment)
 
 class App extends Component {
   state = {
@@ -41,6 +46,10 @@ class App extends Component {
       .catch(error => console.error('Error', error))
   }
 
+  searchOptions = {
+    types: ['(cities)']
+  }
+
   placeArr = ["Le Boulanger", "Quiznos", "Taco Bell"];
 
   render() {
@@ -58,6 +67,7 @@ class App extends Component {
           value={this.state.address}
           onChange={this.handleChange}
           onSelect={this.handleSelect}
+          searchOptions={this.searchOptions}
         >
           {({ getInputProps, suggestions, getSuggestionItemProps }) => (
             <div>
@@ -85,9 +95,17 @@ class App extends Component {
             </div>
           )}
         </PlacesAutocomplete>
-
         <button type="submit" onClick={this.callApi}>Search</button>
         <p> {this.state.response} </p>
+
+        <BigCalendar
+          localizer={localizer}
+          events={[]}
+          defaultDate={new Date()}
+          defaultView="month"
+          style={{ height: "100vh" }}
+        />
+
       </div>
     );
   }
