@@ -28,7 +28,6 @@
     "nodemon": "^1.17.4",
     "pg": "^7.4.1",
     "pg-format": "^1.0.4",
-    "react-big-calendar": "^0.19.2",
     "react-places-autocomplete": "^7.1.1",
     "sequelize": "^4.33.4"
   },

@@ -5,23 +5,6 @@ import logo from './logo.svg';
 import './App.css';
 import Hour from './Hour.js';
 import List from './List.js';
-// TODO: move to calendar.js
-import BigCalendar from 'react-big-calendar';
-import moment from 'moment';
-
-
-BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
-
-const MyCalendar = props => (
-  <div>
-    <BigCalendar
-      events={[]}
-      startAccessor='2/20/2015'
-      endAccessor='2/28/2015'
-    />
-  </div>
-);
-
 
 class App extends Component {
   state = {
@@ -103,28 +86,11 @@ class App extends Component {
           )}
         </PlacesAutocomplete>
 
-        <BigCalendar
-          selectable
-          events={[]}
-          localizer={BigCalendar.momentLocalizer}
-          defaultView={BigCalendar.Views.WEEK}
-          scrollToTime={new Date(2015, 1, 1, 6)}
-          defaultDate={new Date(2015, 3, 12)}
-          onSelectEvent={event => alert(event.title)}
-          onSelectSlot={slotInfo =>
-            alert(
-              `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
-                `\nend: ${slotInfo.end.toLocaleString()}` +
-                `\naction: ${slotInfo.action}`
-            )
-          }
-        />
-
         <button type="submit" onClick={this.callApi}>Search</button>
         <p> {this.state.response} </p>
       </div>
     );
-  } 
+  }
 }
 
 
