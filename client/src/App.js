@@ -4,29 +4,30 @@ import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-au
 import logo from './logo.svg';
 import './App.css';
 import Hour from './Hour.js';
-import List from './List.js';
+import Day from './Day.js';
 // TODO: move to calendar.js
-import BigCalendar from 'react-big-calendar';
-import moment from 'moment';
+// import BigCalendar from 'react-big-calendar';
+// import moment from 'moment';
 
 
-BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
+// BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
 
-const MyCalendar = props => (
-  <div>
-    <BigCalendar
-      events={[]}
-      startAccessor='2/20/2015'
-      endAccessor='2/28/2015'
-    />
-  </div>
-);
+// const MyCalendar = props => (
+//   <div>
+//     <BigCalendar
+//       events={[]}
+//       startAccessor='2/20/2015'
+//       endAccessor='2/28/2015'
+//     />
+//   </div>
+// );
 
 
 class App extends Component {
   state = {
     response: '',
-    address: ''
+    address: '',
+    response_json: null
   };
 
   componentDidMount() {
@@ -43,7 +44,8 @@ class App extends Component {
       console.log(body);
 
       if (response.status !== 200) throw Error(body.message);
-      this.setState({response: JSON.stringify(body)})
+      this.setState({response: JSON.stringify(body)});
+      this.setState({response_day: JSON.stringify(body[0])});
     }
   };
 
@@ -103,7 +105,7 @@ class App extends Component {
           )}
         </PlacesAutocomplete>
 
-        <BigCalendar
+        {/* <BigCalendar
           selectable
           events={[]}
           localizer={BigCalendar.momentLocalizer}
@@ -118,10 +120,14 @@ class App extends Component {
                 `\naction: ${slotInfo.action}`
             )
           }
-        />
+        /> */}
+
 
         <button type="submit" onClick={this.callApi}>Search</button>
-        <p> {this.state.response} </p>
+        {/* <p> {this.state.response} </p> */}
+        {this.state.response_day &&
+          <Day places={this.state.response_day}/>
+        }
       </div>
     );
   } 

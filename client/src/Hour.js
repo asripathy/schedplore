@@ -15,9 +15,11 @@ class Hour extends Component {
 
     render() {
         return(
-            <div>
-                {this.renderSelectedPlace()}
-            </div>
+            <tr>
+                <td>
+                    {this.props.places}
+                </td>
+            </tr>
         )
     };
 
