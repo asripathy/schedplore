@@ -5,21 +5,35 @@ class Hour extends Component {
         selectedPlace: 'Cupertino',
     };
 
-    renderSelectedPlace = () => {
-        if (this.state.selectedPlace === '') {
-            return null;
-        } else {
-            return <p> {this.state.selectedPlace} </p>
-        }
-    }
+    renderPlaces = (places) => 
+    places.map((place) => (
+        <tr>
+            <td>
+                {JSON.stringify(place)}
+            </td>
+        </tr>
+    ));
 
     render() {
         return(
-            <tr>
-                <td>
-                    {this.props.places}
-                </td>
-            </tr>
+        <div className="hour_view">
+            <style>{`
+                table {
+                font-family:arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                }
+
+                td, th {
+                border:1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+                }
+            `}</style>
+            <table>
+                {this.renderPlaces(JSON.parse(this.props.places))}
+            </table>
+        </div>
         )
     };
 

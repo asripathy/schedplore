@@ -103,6 +103,9 @@ function getGooglePlaces(res, city, location, radius, type, callback) {
         place['address'] = result['vicinity'];
         place['lat'] = result['geometry']['location']['lat'];
         place['lng'] = result['geometry']['location']['lng'];
+        if (result['photos'] && result['photos'].length > 0 && result['photos'][0]['photo_reference']) {
+          place['photo_reference'] = result['photos'][0]['photo_reference']
+        }
         places.push(place);
       }
       getPlaceHours(places, function (newPlaces) {
@@ -199,7 +202,7 @@ function populateDB(city, places, callback) {
     var place = places[i];
     place_ids.push(place.place_id);
     // Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours);
-    promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours));
+    promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours, place.photo_reference));
   }
   promises.push(City.upsertCityPromise(city, place_ids));
 

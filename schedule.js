@@ -44,7 +44,8 @@ module.exports = {
                             newPlace.rating = place.rating;
                             newPlace.address = place.address;
                             newPlace.lat = place.lat;
-                            newPlace.lng = place.lng;                            
+                            newPlace.lng = place.lng;
+                            newPlace.photo_reference = place.photo_reference;
                             openPlaces.push(newPlace);
                         }
                     });

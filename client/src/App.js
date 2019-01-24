@@ -45,7 +45,7 @@ class App extends Component {
 
       if (response.status !== 200) throw Error(body.message);
       this.setState({response: JSON.stringify(body)});
-      this.setState({response_day: JSON.stringify(body[0])});
+      this.setState({response_hour: JSON.stringify(body[0][11])});
     }
   };
 
@@ -125,8 +125,8 @@ class App extends Component {
 
         <button type="submit" onClick={this.callApi}>Search</button>
         {/* <p> {this.state.response} </p> */}
-        {this.state.response_day &&
-          <Day places={this.state.response_day}/>
+        {this.state.response_hour &&
+          <Hour places={this.state.response_hour}/>
         }
       </div>
     );
