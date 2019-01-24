@@ -12,10 +12,16 @@ import moment from 'moment'
 const localizer = BigCalendar.momentLocalizer(moment)
 
 class App extends Component {
-  state = {
-    response: '',
-    address: ''
-  };
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      response: '',
+      address: '',
+      events: []
+    }
+  }
+  
 
   componentDidMount() {
     // this.callApi()
@@ -45,6 +51,13 @@ class App extends Component {
       .then(latLng => console.log('Success', latLng))
       .catch(error => console.error('Error', error))
   }
+
+  onSlotChange(slotInfo) {
+    var startDate = moment(slotInfo.start.toLocaleString()).toDate();
+    var endDate = moment(slotInfo.end.toLocaleString()).toDate();
+    console.log(startDate); 
+    console.log(endDate);
+}
 
   searchOptions = {
     types: ['(cities)']
@@ -99,11 +112,14 @@ class App extends Component {
         <p> {this.state.response} </p>
 
         <BigCalendar
+          selectable
+          onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
           localizer={localizer}
           events={[]}
           defaultDate={new Date()}
-          defaultView="month"
+          defaultView="week"
           style={{ height: "100vh" }}
+
         />
 
       </div>
