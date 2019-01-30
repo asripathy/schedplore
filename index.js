@@ -104,13 +104,18 @@ function getGooglePlaces(res, city, location, radius, type, callback) {
         place['lat'] = result['geometry']['location']['lat'];
         place['lng'] = result['geometry']['location']['lng'];
         if (result['photos'] && result['photos'].length > 0 && result['photos'][0]['photo_reference']) {
-          place['photo_reference'] = result['photos'][0]['photo_reference']
+          place['photo_reference'] = result['photos'][0]['photo_reference'];
+        } else {
+          place['photo_reference'] = null;
         }
         places.push(place);
       }
-      getPlaceHours(places, function (newPlaces) {
-        populateDB(city, newPlaces, callback);
-      })
+
+      getPlacePhotos(places, function (newPlaces) {
+        getPlaceHours(newPlaces, function (newPlaces2) {
+          populateDB(city, newPlaces2, callback);
+        });
+      });
     });
 
   }).on("error", function (err) {
@@ -195,6 +200,45 @@ function getPlaceHours(places, callback) {
   });
 }
 
+function getPlacePhotos(places, callback) {
+  newPlaces = [];
+  num_to_process = places.length;
+
+  places.forEach(function (place, i) {
+    num_to_process -= 1;
+    if (!places[i].photo_reference) {
+      place['photo'] = null;
+    } else { 
+      var url = "https://maps.googleapis.com/maps/api/place/photo?key=" + google_key + "&maxheight=600&photoreference=" + place.photo_reference;
+      https.get(url, function (resp) {
+        var data = '';
+
+        resp.on('data', function (chunk) {
+          data += chunk;
+        });
+
+        resp.on('end', function () {
+          // TODO clean this up later
+          var imgtag_index = data.indexOf('<A HREF="');
+          if (imgtag_index == -1) {
+            place['photo'] = null;
+          } else {
+            var img_url = data.substr(imgtag_index + 9);
+            img_url = img_url.substr(0, img_url.indexOf('"'));
+            place['photo'] = img_url;
+          }
+          console.log(place.photo);
+        })
+      })
+    }
+    newPlaces.push(place);
+  });
+
+  if (num_to_process == 0) {
+    callback(newPlaces);
+  }
+}
+
 function populateDB(city, places, callback) {
   place_ids = [];
   var promises = [];
@@ -202,7 +246,7 @@ function populateDB(city, places, callback) {
     var place = places[i];
     place_ids.push(place.place_id);
     // Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours);
-    promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours, place.photo_reference));
+    promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours, place.photo_reference, place.photo));
   }
   promises.push(City.upsertCityPromise(city, place_ids));
 

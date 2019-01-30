@@ -46,6 +46,7 @@ module.exports = {
                             newPlace.lat = place.lat;
                             newPlace.lng = place.lng;
                             newPlace.photo_reference = place.photo_reference;
+                            newPlace.photo = place.photo;
                             openPlaces.push(newPlace);
                         }
                     });
