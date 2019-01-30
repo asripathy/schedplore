@@ -18,7 +18,13 @@ class App extends Component {
     this.state = {
       response: '',
       address: '',
-      events: []
+      events: [
+        {
+          start: new Date(),
+          end: new Date(moment().add(1, "hours")),
+          title: "Test Event"
+        }
+      ]
     }
   }
   
@@ -52,12 +58,24 @@ class App extends Component {
       .catch(error => console.error('Error', error))
   }
 
-  onSlotChange(slotInfo) {
+  onSlotChange = (slotInfo) => {
     var startDate = moment(slotInfo.start.toLocaleString()).toDate();
     var endDate = moment(slotInfo.end.toLocaleString()).toDate();
     console.log(startDate); 
     console.log(endDate);
 }
+
+  addEvent = () => {
+    // var updatedEvents = this.state.events;
+    // updatedEvents.push(
+    //   {
+    //     start: new Date(),
+    //     end: new Date(moment().add(2, "hours")),
+    //     title: "New Event"
+    //   }
+    // )
+    // this.setState({events : updatedEvents})
+  }
 
   searchOptions = {
     types: ['(cities)']
@@ -115,11 +133,10 @@ class App extends Component {
           selectable
           onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
           localizer={localizer}
-          events={[]}
+          events={this.state.events}
           defaultDate={new Date()}
           defaultView="week"
           style={{ height: "100vh" }}
-
         />
 
       </div>
