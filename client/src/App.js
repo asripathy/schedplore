@@ -3,32 +3,31 @@ import Script from 'react-load-script';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import logo from './logo.svg';
 import './App.css';
-import Hour from './Hour.js';
-import Day from './Day.js';
-// TODO: move to calendar.js
-// import BigCalendar from 'react-big-calendar';
-// import moment from 'moment';
+import PlaceList from './PlaceList.js';
+import List from './List.js';
+import BigCalendar from 'react-big-calendar'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+import moment from 'moment'
 
-
-// BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
-
-// const MyCalendar = props => (
-//   <div>
-//     <BigCalendar
-//       events={[]}
-//       startAccessor='2/20/2015'
-//       endAccessor='2/28/2015'
-//     />
-//   </div>
-// );
-
+const localizer = BigCalendar.momentLocalizer(moment)
 
 class App extends Component {
-  state = {
-    response: '',
-    address: '',
-    response_json: null
-  };
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      response: '',
+      address: '',
+      events: [
+        {
+          start: new Date(),
+          end: new Date(moment().add(1, "hours")),
+          title: "Test Event"
+        }
+      ]
+    }
+  }
+  
 
   componentDidMount() {
     // this.callApi()
@@ -60,6 +59,32 @@ class App extends Component {
       .catch(error => console.error('Error', error))
   }
 
+  onSlotChange = (slotInfo) => {
+    var startDate = moment(slotInfo.start.toLocaleString()).toDate();
+    var endDate = moment(slotInfo.end.toLocaleString()).toDate();
+    var startDay = startDate.getDay();
+    var startHour = startDate.getHours();
+    var openPlaces = JSON.parse(this.state.response)[startDay][startHour];
+    console.log(openPlaces);
+    this.setState({response_hour: JSON.stringify(openPlaces)})
+}
+
+  addEvent = () => {
+    // var updatedEvents = this.state.events;
+    // updatedEvents.push(
+    //   {
+    //     start: new Date(),
+    //     end: new Date(moment().add(2, "hours")),
+    //     title: "New Event"
+    //   }
+    // )
+    // this.setState({events : updatedEvents})
+  }
+
+  searchOptions = {
+    types: ['(cities)']
+  }
+
   placeArr = ["Le Boulanger", "Quiznos", "Taco Bell"];
 
   render() {
@@ -77,6 +102,7 @@ class App extends Component {
           value={this.state.address}
           onChange={this.handleChange}
           onSelect={this.handleSelect}
+          searchOptions={this.searchOptions}
         >
           {({ getInputProps, suggestions, getSuggestionItemProps }) => (
             <div>
@@ -103,34 +129,34 @@ class App extends Component {
               </div>
             </div>
           )}
+
         </PlacesAutocomplete>
+        <button type="submit" onClick={this.callApi}>Search</button>        
 
-        {/* <BigCalendar
-          selectable
-          events={[]}
-          localizer={BigCalendar.momentLocalizer}
-          defaultView={BigCalendar.Views.WEEK}
-          scrollToTime={new Date(2015, 1, 1, 6)}
-          defaultDate={new Date(2015, 3, 12)}
-          onSelectEvent={event => alert(event.title)}
-          onSelectSlot={slotInfo =>
-            alert(
-              `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
-                `\nend: ${slotInfo.end.toLocaleString()}` +
-                `\naction: ${slotInfo.action}`
-            )
-          }
-        /> */}
+        <div class="row">
+          <div class="col-md-9">
+            <BigCalendar
+              selectable
+              onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
+              localizer={localizer}
+              events={this.state.events}
+              defaultDate={new Date()}
+              defaultView="week"
+              style={{ height: "80vh" }}
+            />
+          </div>
+          
+          <div class="place-list-view col-md-3">
+            {this.state.response_hour &&
+              <PlaceList places={this.state.response_hour}/>
+            }
+          </div>
+        </div>
+        
 
-
-        <button type="submit" onClick={this.callApi}>Search</button>
-        {/* <p> {this.state.response} </p> */}
-        {this.state.response_hour &&
-          <Hour places={this.state.response_hour}/>
-        }
       </div>
     );
-  } 
+  }
 }
 
 

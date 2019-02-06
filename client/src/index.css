@@ -8,9 +8,9 @@ body {
   height: 70;
 }
 
-.hour-view {
+.place-list-view {
   height: 500px;
-  width: 40%;
+  width: 35%;
   overflow: scroll;
 }
 

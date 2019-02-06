@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Hour extends Component {
+class PlaceList extends Component {
     state = {
         selectedPlace: 'Cupertino',
         img: undefined
@@ -13,7 +13,6 @@ class Hour extends Component {
                 <div>
                     <img class="tile-img" src = {place.photo} height="70"/>
                 </div>
-                {/* {JSON.stringify(place).substring(100)} */}
                 <div>
                     {place.name}<br/>
                     {place.address}<br/>
@@ -25,16 +24,15 @@ class Hour extends Component {
 
     render() {
         return(
-        <div class="hour-view">
-            <table class="place-list-table">
-                {this.renderPlaces(JSON.parse(this.props.places))}
-            </table>
-        </div>
+        <table class="place-list-table">
+            {this.props.places &&
+                this.renderPlaces(JSON.parse(this.props.places))}
+        </table>    
         )
     };
 
 }
 
-export default Hour;
+export default PlaceList;
 
 

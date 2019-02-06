@@ -8,7 +8,7 @@ const place = require('./db/place.js');
 const city = require('./db/city.js');
 const startup = require('./db/startup.js');
 const Sequelize = startup.Sequelize;
-const sequelize = startup.sequelize; 
+const sequelize = startup.sequelize;
 
 
 var Place = place(sequelize, Sequelize);
