@@ -7,3 +7,22 @@ body {
 .tile-img {
   height: 70;
 }
+
+.hour-view {
+  height: 500px;
+  width: 40%;
+  overflow: scroll;
+}
+
+table {
+  font-family:arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  word-wrap: break-word;
+  border:1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
