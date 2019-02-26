@@ -24,8 +24,12 @@ class App extends Component {
           end: new Date(moment().add(1, "hours")),
           title: "Test Event"
         }
-      ]
+      ],
+      selectedStartDate: '',
+      selectedEndDate: ''
     }
+
+    this.updateCalendar = this.updateCalendar.bind(this)
   }
   
 
@@ -33,6 +37,19 @@ class App extends Component {
     // this.callApi()
     //   .then(res => this.setState({ response: JSON.stringify(res) }))
     //   .catch(err => console.log(err));
+  }
+
+  updateCalendar = (title) => {
+    var updatedEvents = this.state.events;
+    updatedEvents.push(
+      {
+         start: this.state.selectedStartDate,
+         end: this.state.selectedEndDate,
+         title: title
+       }
+     )
+    console.log(updatedEvents);
+    this.setState({events : updatedEvents})
   }
 
   callApi = async () => {
@@ -59,13 +76,27 @@ class App extends Component {
       .catch(error => console.error('Error', error))
   }
 
+  roundStart = (startDate) => {
+    startDate.setMinutes(0);
+  }
+
+  roundEnd = (endDate) => {
+    if (endDate.getMinutes() != 0) { 
+      endDate.setMinutes(0);
+      endDate.setTime(endDate.getTime() + (60*60*1000)); 
+    }
+  }
+
   onSlotChange = (slotInfo) => {
     var startDate = moment(slotInfo.start.toLocaleString()).toDate();
     var endDate = moment(slotInfo.end.toLocaleString()).toDate();
+    this.roundStart(startDate);
+    this.roundEnd(endDate);
+    this.setState({selectedStartDate: startDate});
+    this.setState({selectedEndDate: endDate});
     var startDay = startDate.getDay();
     var startHour = startDate.getHours();
     var openPlaces = JSON.parse(this.state.response)[startDay][startHour];
-    console.log(openPlaces);
     this.setState({response_hour: JSON.stringify(openPlaces)})
 }
 
@@ -153,7 +184,7 @@ class App extends Component {
             
             <div class="place-list-view col-md-3">
               {this.state.response_hour &&
-                <PlaceList places={this.state.response_hour}/>
+                <PlaceList places={this.state.response_hour} updateCalendar={this.updateCalendar}/>
               }
             </div>
           </div>

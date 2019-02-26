@@ -9,7 +9,7 @@ class PlaceList extends Component {
     renderPlaces = (places) => 
     places.map((place) => (
         <tr>
-            <td>
+            <td onClick={()=>this.props.updateCalendar(place.name)}>
             <div class="card card-class">
                 <img class="card-img-top" src={place.photo} alt="Card image cap"/>
                 <div class="card-body">
