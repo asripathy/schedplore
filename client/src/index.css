@@ -8,10 +8,15 @@ body {
   height: 70;
 }
 
+.big-cal {
+  height: 80vh;
+}
+
+
 .place-list-view {
-  height: 500px;
-  width: 35%;
-  overflow: scroll;
+  height: 80vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 table {
@@ -25,4 +30,12 @@ td, th {
   border:1px solid #dddddd;
   text-align: left;
   padding: 8px;
+}
+
+html,body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden; 
 }

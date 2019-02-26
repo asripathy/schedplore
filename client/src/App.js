@@ -94,64 +94,70 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Schedplore</h1>
         </header>
-        <p className="App-intro">
-          To get started, search a city and select an hour.
-        </p>
 
-        <PlacesAutocomplete
-          value={this.state.address}
-          onChange={this.handleChange}
-          onSelect={this.handleSelect}
-          searchOptions={this.searchOptions}
-        >
-          {({ getInputProps, suggestions, getSuggestionItemProps }) => (
-            <div>
-              <input
-                {...getInputProps({
-                  placeholder: 'Search Places ...',
-                  className: 'location-search-input',
-                  id: 'city'
-                })}
+        {!this.state.response_hour &&
+          <div>
+            <p className="App-intro">
+              To get started, search a city and select an hour.
+            </p>
+
+            <PlacesAutocomplete
+              value={this.state.address}
+              onChange={this.handleChange}
+              onSelect={this.handleSelect}
+              searchOptions={this.searchOptions}
+            >
+              {({ getInputProps, suggestions, getSuggestionItemProps }) => (
+                <div>
+                  <input
+                    {...getInputProps({
+                      placeholder: 'Search Places ...',
+                      className: 'location-search-input',
+                      id: 'city'
+                    })}
+                  />
+                  <div className="autocomplete-dropdown-container">
+                    {suggestions.map(suggestion => {
+                      const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
+                      // inline style for demonstration purpose
+                      const style = suggestion.active
+                        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                      return (
+                        <div {...getSuggestionItemProps(suggestion, { className, style })}>
+                          <span>{suggestion.description}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+            </PlacesAutocomplete>
+            <button type="submit" onClick={this.callApi}>Search</button>     
+          </div>   
+        }
+        
+        {this.state.response_hour &&
+          <div class="row cal-and-list">
+            <div class="big-cal col-md-9">
+              <BigCalendar
+                selectable
+                onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
+                localizer={localizer}
+                events={this.state.events}
+                defaultDate={new Date()}
+                defaultView="week"
               />
-              <div className="autocomplete-dropdown-container">
-                {suggestions.map(suggestion => {
-                  const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                  // inline style for demonstration purpose
-                  const style = suggestion.active
-                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                  return (
-                    <div {...getSuggestionItemProps(suggestion, { className, style })}>
-                      <span>{suggestion.description}</span>
-                    </div>
-                  )
-                })}
-              </div>
             </div>
-          )}
-
-        </PlacesAutocomplete>
-        <button type="submit" onClick={this.callApi}>Search</button>        
-
-        <div class="row">
-          <div class="col-md-9">
-            <BigCalendar
-              selectable
-              onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
-              localizer={localizer}
-              events={this.state.events}
-              defaultDate={new Date()}
-              defaultView="week"
-              style={{ height: "80vh" }}
-            />
+            
+            <div class="place-list-view col-md-3">
+              {this.state.response_hour &&
+                <PlaceList places={this.state.response_hour}/>
+              }
+            </div>
           </div>
-          
-          <div class="place-list-view col-md-3">
-            {this.state.response_hour &&
-              <PlaceList places={this.state.response_hour}/>
-            }
-          </div>
-        </div>
+        }
         
 
       </div>

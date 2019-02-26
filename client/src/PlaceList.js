@@ -10,14 +10,14 @@ class PlaceList extends Component {
     places.map((place) => (
         <tr>
             <td>
-                <div>
-                    <img class="tile-img" src = {place.photo} height="70"/>
+            <div class="card card-class">
+                <img class="card-img-top" src={place.photo} alt="Card image cap"/>
+                <div class="card-body">
+                    <h5 class="card-title">{place.name}</h5>
+                    <p class="card-text">{place.address}</p>
+                    <p class="card-text">Rating: {place.rating}</p>
                 </div>
-                <div>
-                    {place.name}<br/>
-                    {place.address}<br/>
-                    {place.rating}
-                </div>
+            </div>
             </td>
         </tr>
     ));
