@@ -33,6 +33,16 @@ body {
   padding-left: 30px;
 }
 
+.event-modal {
+  font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
+  position: relative;
+  top: 30%;
+}
+
+.event-modal-body {
+  text-align: left;
+}
+
 .place-list-view {
   height: 80vh;
   overflow-y: scroll;

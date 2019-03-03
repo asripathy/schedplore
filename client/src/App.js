@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import Script from 'react-load-script';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import logo from './logo.svg';
 import './App.css';
 import PlaceList from './PlaceList.js';
-import List from './List.js';
 import BigCalendar from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import moment from 'moment'
@@ -20,23 +17,47 @@ class App extends Component {
       address: '',
       events: [],
       selectedStartDate: '',
-      selectedEndDate: ''
+      selectedEndDate: '',
+      modalVisible: false,
+      selectedEvent: {}
     }
 
-    this.updateCalendar = this.updateCalendar.bind(this)
+    this.toggleModal = this.toggleModal.bind(this);
+    this.updateCalendar = this.updateCalendar.bind(this);
     this.daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   }
 
-  updateCalendar = (title) => {
+  toggleModal() {
+    const modalVisible = !this.state.modalVisible;
+    this.setState({
+      modalVisible
+    });
+  }
+
+  updateCalendar = (place) => {
     var updatedEvents = this.state.events;
+    var address = {
+      id : place.id,
+      title : place.address
+    };
     updatedEvents.push(
       {
          start: this.state.selectedStartDate,
          end: this.state.selectedEndDate,
-         title: title
+         title: place.name,
+         resource: address
        }
      )
+     console.log(updatedEvents);
     this.setState({events : updatedEvents})
+  }
+
+  deleteEvent = () => {
+    var updatedEvents = this.state.events;
+    var selectedEvent = this.state.selectedEvent;
+    updatedEvents.splice(updatedEvents.findIndex(v => v.title == selectedEvent.title && v.start == selectedEvent.start && v.end == selectedEvent.end), 1);
+    this.setState({events: updatedEvents});
+    this.toggleModal();
   }
 
   callApi = async () => {
@@ -83,6 +104,11 @@ class App extends Component {
     this.setState({response_hour: JSON.stringify(openPlaces)})
   }
 
+  onSelectEvent = (event) => {
+    this.setState({selectedEvent: event});
+    this.toggleModal();
+  }
+
   clearSearch = () => {
     this.setState({response: ''});
     this.setState({response_hour: ''});
@@ -112,6 +138,30 @@ class App extends Component {
     return hour >= 12 ? 'pm' : 'am'
   }
 
+  generateRangeForCurentTimeSlot = () => {
+    return this.generateRange(this.state.selectedStartDate, this.state.selectedEndDate);
+  }
+
+  eventSelected = () => {
+    return 'start' in this.state.selectedEvent;
+  }
+
+  generateRangeForCurrentEvent = () => {
+    if (this.eventSelected()) {
+      return this.generateRange(this.state.selectedEvent.start, this.state.selectedEvent.end);
+    }
+  }
+
+  getcurrentEventAddress = () => {
+    if (this.eventSelected()) {
+      return this.state.selectedEvent.resource.title;
+    }
+  }
+
+  generateRange = (startDate, endDate) => {
+    return this.daysOfWeek[startDate.getDay()] + " " +  this.getTwelveHour(startDate.getHours()) +  this.getAmPm(startDate.getHours()) + ' to ' +   this.getTwelveHour(endDate.getHours()) +  this.getAmPm(endDate.getHours());
+  }
+
   searchOptions = {
     types: ['(cities)']
   }
@@ -119,6 +169,9 @@ class App extends Component {
   placeArr = ["Le Boulanger", "Quiznos", "Taco Bell"];
 
   render() {
+    let styles = this.state.modalVisible
+      ? { display: "block" }
+      : { display: "none" };
     return (
       <div className="App">
         <header className="App-header">
@@ -184,21 +237,43 @@ class App extends Component {
                   <BigCalendar
                     selectable
                     onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
+                    onSelectEvent={(event) => this.onSelectEvent(event) }
                     views={['week', 'day', 'agenda']}
                     localizer={localizer}
                     events={this.state.events}
                     defaultDate={new Date()}
                     defaultView="week"
-                    step="60"
-                    timeslots="1"
+                    step={60}
+                    timeslots={1}
                   />
+                </div>
+                <div className="modal" role="dialog" tabIndex='-1' style={styles}>
+                  <div className="modal-dialog event-modal">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id="exampleModalLabel">
+                          {this.state.selectedEvent.title}
+                        </h5>
+                        <button type="button" className="close" onClick={this.toggleModal}>
+                          <span>&times;</span>
+                        </button>
+                      </div>
+                      <div className="modal-body event-modal-body">
+                        <p> Address: {this.getcurrentEventAddress()} </p>
+                        <p> Time: {this.generateRangeForCurrentEvent()} </p>
+                      </div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={this.deleteEvent}>Delete</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="col-md-3">
                 <div className="place-list">
                   {this.state.response_hour &&
                     <div>
-                      <p className="listText"> {this.daysOfWeek[this.state.selectedStartDate.getDay()]} {this.getTwelveHour(this.state.selectedStartDate.getHours())} {this.getAmPm(this.state.selectedStartDate.getHours())} to {this.getTwelveHour(this.state.selectedEndDate.getHours())} {this.getAmPm(this.state.selectedEndDate.getHours())}</p>
+                      <p className="listText"> {this.generateRangeForCurentTimeSlot()}</p>
                       <div className="place-list-view">
                       <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar}/>
                       </div>
