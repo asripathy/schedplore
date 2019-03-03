@@ -21,11 +21,11 @@ body {
 }
 
 .cal-and-list {
-  padding-top: 10px;
+  padding-top: 20px;
 }
 
 .big-cal-container {
-  height: 86vh;
+  height: 85vh;
   overflow-y: scroll;
 }
 

@@ -27,12 +27,6 @@ class App extends Component {
     this.daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   }
 
-  componentDidMount() {
-    // this.callApi()
-    //   .then(res => this.setState({ response: JSON.stringify(res) }))
-    //   .catch(err => console.log(err));
-  }
-
   updateCalendar = (title) => {
     var updatedEvents = this.state.events;
     updatedEvents.push(
@@ -42,7 +36,6 @@ class App extends Component {
          title: title
        }
      )
-    console.log(updatedEvents);
     this.setState({events : updatedEvents})
   }
 
@@ -51,7 +44,6 @@ class App extends Component {
     if(city){
       const response = await fetch('/place/' + city);
       const body = await response.json();
-      console.log(body);
       if (response.status !== 200) throw Error(body.message);
       this.setState({response: JSON.stringify(body)});
     }
@@ -68,27 +60,26 @@ class App extends Component {
       .catch(error => console.error('Error', error))
   }
 
-  roundStart = (startDate) => {
-    startDate.setMinutes(0);
-  }
-
-  roundEnd = (endDate) => {
-    if (endDate.getMinutes() != 0) { 
-      endDate.setMinutes(0);
-      endDate.setTime(endDate.getTime() + (60*60*1000)); 
-    }
-  }
-
   onSlotChange = (slotInfo) => {
     var startDate = moment(slotInfo.start.toLocaleString()).toDate();
     var endDate = moment(slotInfo.end.toLocaleString()).toDate();
-    this.roundStart(startDate);
-    this.roundEnd(endDate);
     this.setState({selectedStartDate: startDate});
     this.setState({selectedEndDate: endDate});
     var startDay = startDate.getDay();
     var startHour = startDate.getHours();
+    var endHour = endDate.getHours();
     var openPlaces = JSON.parse(this.state.response)[startDay][startHour];
+    for (var hour = startHour + 1; hour < endHour; hour++) {
+      var places = JSON.parse(this.state.response)[startDay][hour];
+      var updatedPlaces = [];
+      for (var i = 0; i < openPlaces.length; i++) {
+        var openPlace = openPlaces[i];
+        if (places.some(e => e.id === openPlace.id)) {
+          updatedPlaces.push(openPlace);
+        }
+      }
+      openPlaces = updatedPlaces;
+    }
     this.setState({response_hour: JSON.stringify(openPlaces)})
   }
 
@@ -193,10 +184,13 @@ class App extends Component {
                   <BigCalendar
                     selectable
                     onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
+                    views={['week', 'day', 'agenda']}
                     localizer={localizer}
                     events={this.state.events}
                     defaultDate={new Date()}
                     defaultView="week"
+                    step="60"
+                    timeslots="1"
                   />
                 </div>
               </div>
@@ -213,7 +207,7 @@ class App extends Component {
                 </div>
                 {!this.state.response_hour &&
                     <div className="emptyListMessage"> 
-                      <p className="listText"> Select a time slot to view open restaurants :) </p>
+                      <p className="listText"> Select a time slot from the calendar </p>
                     </div>
                   }
               </div>
