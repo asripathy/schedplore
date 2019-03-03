@@ -10,6 +10,8 @@ var City = city(sequelize, Sequelize);
 
 function retrievePlaces(city, callback) {
     City.getCity(city, function (city) {
+        console.log('in retrieve');
+        console.log(city);
         var placeIds = city['dataValues']['place_ids'];
         var newPlaces = [];
         placeIds.forEach(function (placeId) {

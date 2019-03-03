@@ -77,13 +77,30 @@ function getLatLng(city, callback) {
 // wrapper function for getGooglePlaces
 function getPlaces(res, city, radius, type, callback) {
   getLatLng(city, function (latlng) {
-    getGooglePlaces(res, city, latlng, radius, type, callback);
+    // TODO do search sanitization
+    cityName = city.substring(0, city.indexOf(','));
+    getGooglePlaces(res, cityName, 'food', [], function(restaurants) {
+      getGooglePlaces(res, cityName, 'attraction', restaurants, function(allPlaces) {
+          getPlacePhotos(allPlaces, function (placesWithPhotos) {
+            getPlaceHours(placesWithPhotos, function (finalPlaces) {
+              populateDB(city, finalPlaces, callback);
+            });
+        });
+      });
+    });
+    
   });
 }
 
 // returns a list of places objects
-function getGooglePlaces(res, city, location, radius, type, callback) {
-  var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=' + google_key + '&location=' + location + '&radius=' + radius + '&type=' + type;
+function getGooglePlaces(res, city, type, curPlaces, callback) {
+  var searchQuery = '';
+  if (type == 'food') {
+    searchQuery = ' restaurants';
+  } else {
+    searchQuery= ' things to do'
+  }
+  var url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?key=' + google_key +  '&query=' + city + searchQuery;
   https.get(url, function (resp) {
     var data = '';
 
@@ -93,7 +110,7 @@ function getGooglePlaces(res, city, location, radius, type, callback) {
 
     resp.on('end', function () {
       results = JSON.parse(data)['results'];
-      var places = [];
+      var places = curPlaces;
       for (var i = 0; i < results.length; i++) {
         var result = results[i];
         var place = {};
@@ -111,11 +128,7 @@ function getGooglePlaces(res, city, location, radius, type, callback) {
         places.push(place);
       }
 
-      getPlacePhotos(places, function (newPlaces) {
-        getPlaceHours(newPlaces, function (newPlaces2) {
-          populateDB(city, newPlaces2, callback);
-        });
-      });
+      callback(places);
     });
 
   }).on("error", function (err) {
@@ -139,17 +152,26 @@ function parseHours(periods, callback) {
     var open = periods[i]['open'];
     var startDay = open['day'];
     var startTime = parseInt(open['time'].substring(0, 2));
-    var closeDay = close['day'];
-    var closeTime = parseInt(close['time'].substring(0, 2));
-    if (startDay != closeDay) {
+    var closeDay = undefined;
+    var closeTime = undefined;
+    
+    if (close) {
+      closeDay = close['day'];
+      closeTime = parseInt(close['time'].substring(0, 2));
+    }
+    
+    if (!close) {
+      for (var hour = startTime; hour < 24; hour++) {
+        hours[startDay][hour] = 1;
+      }
+    } else if (startDay != closeDay) {
       for (var hour = startTime; hour < 24; hour++) {
         hours[startDay][hour] = 1;
       }
       for (var hour = 0; hour < closeTime; hour++) {
         hours[closeDay][hour] = 1;
       }
-    }
-    else {
+    } else {
       for (var hour = startTime; hour < closeTime; hour++) {
         hours[startDay][hour] = 1;
       }
@@ -240,6 +262,9 @@ function getPlacePhotos(places, callback) {
 }
 
 function populateDB(city, places, callback) {
+  console.log('IN POPULATE DB');
+  console.log(city);
+  console.log(places);
   place_ids = [];
   var promises = [];
   for (let i = 0; i < places.length; i++) {
