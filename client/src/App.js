@@ -24,6 +24,7 @@ class App extends Component {
     }
 
     this.updateCalendar = this.updateCalendar.bind(this)
+    this.daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   }
 
   componentDidMount() {
@@ -112,6 +113,14 @@ class App extends Component {
     // this.setState({events : updatedEvents})
   }
 
+  getTwelveHour = (hour) => {
+    return hour % 12 == 0 ? 12 : hour % 12;
+  }
+
+  getAmPm = (hour) => {
+    return hour >= 12 ? 'pm' : 'am'
+  }
+
   searchOptions = {
     types: ['(cities)']
   }
@@ -191,15 +200,20 @@ class App extends Component {
                   />
                 </div>
               </div>
-              <div className="place-list-view col-md-3">
+              <div className="col-md-3">
                 <div className="place-list">
                   {this.state.response_hour &&
-                    <PlaceList places={this.state.response_hour} updateCalendar={this.updateCalendar}/>
+                    <div>
+                      <p className="listText"> {this.daysOfWeek[this.state.selectedStartDate.getDay()]} {this.getTwelveHour(this.state.selectedStartDate.getHours())} {this.getAmPm(this.state.selectedStartDate.getHours())} to {this.getTwelveHour(this.state.selectedEndDate.getHours())} {this.getAmPm(this.state.selectedEndDate.getHours())}</p>
+                      <div className="place-list-view">
+                      <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar}/>
+                      </div>
+                    </div>
                   }
                 </div>
                 {!this.state.response_hour &&
                     <div className="emptyListMessage"> 
-                      <p className="emptyListText"> Select a time slot to view open restaurants! </p>
+                      <p className="listText"> Select a time slot to view open restaurants :) </p>
                     </div>
                   }
               </div>
