@@ -117,7 +117,7 @@ function getGooglePlaces(res, city, type, curPlaces, callback) {
         place['place_id'] = result['place_id'];
         place['name'] = result['name'];
         place['rating'] = result['rating'];
-        place['address'] = result['vicinity'];
+        place['address'] = result['formatted_address'];
         place['lat'] = result['geometry']['location']['lat'];
         place['lng'] = result['geometry']['location']['lng'];
         if (result['photos'] && result['photos'].length > 0 && result['photos'][0]['photo_reference']) {
