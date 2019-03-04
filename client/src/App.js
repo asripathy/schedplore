@@ -112,6 +112,7 @@ class App extends Component {
   clearSearch = () => {
     this.setState({response: ''});
     this.setState({response_hour: ''});
+    this.clearCalendar();
   }
 
   clearCalendar = () => {

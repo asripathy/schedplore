@@ -114,10 +114,30 @@ function getGooglePlaces(res, city, type, curPlaces, callback) {
       for (var i = 0; i < results.length; i++) {
         var result = results[i];
         var place = {};
+        if ('formatted_address' in result) {
+          var formatted = result['formatted_address'];
+          var formattedAbbrev;
+          var numSpaces = formatted.split(' ').length - 1;
+          if (numSpaces > 0) {
+            var formattedAbbrev = formatted.substring(0, formatted.lastIndexOf(' '));
+            if (numSpaces > 1) {
+              formattedAbbrev = formatted.substring(0, formattedAbbrev.lastIndexOf(' '));
+            }
+            while (!formattedAbbrev.charAt(formattedAbbrev.length - 1).match(/[a-z]/i) && formattedAbbrev.length > 0) {
+              formattedAbbrev = formattedAbbrev.substring(0, formattedAbbrev.length - 1);
+            }
+            place['address'] = formattedAbbrev;
+          }
+          else {
+            place['address'] = formatted;
+          }
+        }
+        else {
+          place['address'] = "";
+        }
         place['place_id'] = result['place_id'];
         place['name'] = result['name'];
         place['rating'] = result['rating'];
-        place['address'] = result['formatted_address'];
         place['lat'] = result['geometry']['location']['lat'];
         place['lng'] = result['geometry']['location']['lng'];
         if (result['photos'] && result['photos'].length > 0 && result['photos'][0]['photo_reference']) {
