@@ -19,7 +19,9 @@ class App extends Component {
       selectedStartDate: '',
       selectedEndDate: '',
       modalVisible: false,
-      selectedEvent: {}
+      selectedEvent: {},
+      validSearch: false,
+      editingSearch: true
     }
 
     this.toggleModal = this.toggleModal.bind(this);
@@ -61,20 +63,27 @@ class App extends Component {
   }
 
   callApi = async () => {
-    let city = this.state.address
-    if(city){
-      const response = await fetch('/place/' + city);
-      const body = await response.json();
-      if (response.status !== 200) throw Error(body.message);
-      this.setState({response: JSON.stringify(body)});
+    this.setState({editingSearch: false});
+    if (this.state.validSearch) {
+      let city = this.state.address
+      if (city) {
+        const response = await fetch('/place/' + city);
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        this.setState({response: JSON.stringify(body)});
+      }
     }
   };
 
   handleChange = (address) => {
+    this.setState({editingSearch: true});
+    this.setState({validSearch: false});
     this.setState({ address })
   }
 
   handleSelect = (address) => {
+    this.setState({editingSearch: true});
+    this.setState({validSearch: true});
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
       .then(latLng => console.log('Success', latLng))
@@ -170,7 +179,10 @@ class App extends Component {
   placeArr = ["Le Boulanger", "Quiznos", "Taco Bell"];
 
   render() {
-    let styles = this.state.modalVisible
+    let modalstyles = this.state.modalVisible
+      ? { display: "block" }
+      : { display: "none" };
+    let searcherrorstyles = !this.state.validSearch && !this.state.editingSearch
       ? { display: "block" }
       : { display: "none" };
     return (
@@ -202,6 +214,9 @@ class App extends Component {
                         <span className="input-group-btn">
                           <button className="btn btn-primary" onClick={this.callApi}> Search </button>
                         </span>
+                      </div>
+                      <div class="warning-container" style={searcherrorstyles}>
+                        <p class="warning-text"> Please select a city using the dropdown. </p>
                       </div>
                     </div>
                   </div>
@@ -248,7 +263,7 @@ class App extends Component {
                     timeslots={1}
                   />
                 </div>
-                <div className="modal" role="dialog" tabIndex='-1' style={styles}>
+                <div className="modal" role="dialog" tabIndex='-1' style={modalstyles}>
                   <div className="modal-dialog event-modal">
                     <div className="modal-content">
                       <div className="modal-header">

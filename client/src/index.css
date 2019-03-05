@@ -8,6 +8,11 @@ body {
   height: 70;
 }
 
+.warning-text {
+  padding-top: 10px;
+  color: #cc0000;
+}
+
 .back-button {
   position: fixed;
   top: 15px;
@@ -81,7 +86,6 @@ body {
 
 .listText {
   font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
-  font-weight: bold;
   font-size: 20px;
 }
 
