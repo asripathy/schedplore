@@ -29,6 +29,10 @@ body {
   overflow-y: scroll;
 }
 
+.big-cal-container:hover {
+  cursor: pointer;
+}
+
 .big-cal {
   padding-left: 30px;
 }
@@ -52,6 +56,19 @@ body {
 
 .place-list {
   padding-right: 30px;
+}
+
+.place-list-table {
+  border: 1px solid #DDD;
+}
+
+.card-cell {
+  border: none;
+}
+
+.place-card:hover {
+  cursor: pointer;
+  background: #eaf6ff;  
 }
 
 .emptyListMessage {
