@@ -20,10 +20,12 @@ class App extends Component {
       selectedEndDate: '',
       modalVisible: false,
       selectedEvent: {},
+      selectedType: 'food',
       validSearch: false,
       editingSearch: true
     }
-
+    
+    this.handleTypeChange = this.handleTypeChange.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.updateCalendar = this.updateCalendar.bind(this);
     this.daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -34,6 +36,11 @@ class App extends Component {
     this.setState({
       modalVisible
     });
+  }
+
+  handleTypeChange(event) {
+      var type = event.currentTarget.querySelector("input").value;
+      this.setState({ selectedType: type });
   }
 
   updateCalendar = (place) => {
@@ -290,8 +297,18 @@ class App extends Component {
                   {this.state.response_hour &&
                     <div>
                       <p className="listText"> {this.generateRangeForCurentTimeSlot()}</p>
+                      <div className="type-buttons row">
+                          <div className="btn-group btn-group-toggle offset-md-4" data-toggle="buttons">
+                              <label className="btn btn-light active col-md-4" onClick={this.handleTypeChange}>
+                                  <input type="radio" name="placeType" value="food" autocomplete="off" checked /> <p className="tabText"> Food </p>
+                              </label>
+                              <label className="btn btn-light col-md-8" onClick={this.handleTypeChange}>
+                                  <input type="radio" name="placeType" value="attraction" autocomplete="off" /> <p className="tabText"> Attractions </p> 
+                              </label>
+                          </div> 
+                      </div>
                       <div className="place-list-view">
-                      <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar}/>
+                      <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar} selectedType={this.state.selectedType}/>
                       </div>
                     </div>
                   }
