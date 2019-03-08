@@ -2,7 +2,9 @@ var https = require('https')
 var express = require('express');
 var app = express();
 var port = process.env.PORT || 5000;
-var google_key = require('./api-key.json').key;
+
+require('dotenv').config();
+var google_key = process.env.GOOGLE_API_KEY;
 
 const place = require('./db/place.js');
 const city = require('./db/city.js');
