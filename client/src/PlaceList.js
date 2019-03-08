@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 class PlaceList extends Component {
     renderPlaces = (places) => 
         places.map((place) => (
-            <tr style={{display: this.props.selectedType == place.type ? 'block' : 'none'}}>
+            <tr style={{display: this.props.selectedType == place.type ? 'block' : 'none'}} class="row place-list-row">
                 <td class="card-cell" onClick={()=>this.props.updateCalendar(place)}>
                 <div class="card card-class place-card text-center">
-                    <img class="card-img-top" src={place.photo} alt="Card image cap"/>
+                    {place.photo && <img class="card-img-top" src={place.photo} alt="Card image cap"/>}
                     <div class="card-body">
                         <h5 class="card-title">{place.name}</h5>
                         <p class="card-text">{place.address}</p>
-                        <p class="card-text">Rating: {place.rating}</p>
+                        <p class="card-text">{place.rating} <span>&#9733;</span></p> 
                     </div>
                 </div>
                 </td>

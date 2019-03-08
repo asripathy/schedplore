@@ -315,7 +315,7 @@ class App extends Component {
                           </div> 
                       </div>
                       <div className="place-list-view">
-                      <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar} selectedType={this.state.selectedType}/>
+                        <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar} selectedType={this.state.selectedType}/>
                       </div>
                     </div>
                   }
