@@ -53,7 +53,7 @@ body {
 }
 
 .place-list-view {
-  height: 76vh;
+  height: 74.5vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -67,8 +67,8 @@ body {
 }
 
 .place-list-row {
-  margin-right: 5px;
-  margin-left: 5px;
+  margin-right: 6px;
+  margin-left: 6px;
 }
 
 .card-img-top {
@@ -79,6 +79,7 @@ body {
 
 .card-cell {
   border: none;
+  display: block;
 }
 
 .place-card:hover {
