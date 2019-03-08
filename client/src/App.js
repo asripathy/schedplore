@@ -22,7 +22,8 @@ class App extends Component {
       selectedEvent: {},
       selectedType: 'food',
       validSearch: false,
-      editingSearch: true
+      editingSearch: true,
+      loadingResults: false
     }
     
     this.handleTypeChange = this.handleTypeChange.bind(this);
@@ -72,11 +73,13 @@ class App extends Component {
   callApi = async () => {
     this.setState({editingSearch: false});
     if (this.state.validSearch) {
+      this.setState({loadingResults: true});
       let city = this.state.address
       if (city) {
         const response = await fetch('/place/' + city);
         const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
+        this.setState({loadingResults: false});
         this.setState({response: JSON.stringify(body)});
       }
     }
@@ -198,7 +201,7 @@ class App extends Component {
           <h1 className="App-title"> Schedplore </h1>
         </header>
 
-        {!this.state.response &&
+        {!this.state.response && !this.state.loadingResults &&
           <div>
             <PlacesAutocomplete
               value={this.state.address}
@@ -248,6 +251,10 @@ class App extends Component {
 
             </PlacesAutocomplete>
           </div>   
+        }
+
+        {this.state.loadingResults &&
+          <div class="loader"></div>
         }
         
         {this.state.response &&
