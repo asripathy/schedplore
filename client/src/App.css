@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
 }
 
 .App-logo {
@@ -9,8 +10,6 @@
 
 .App-title {
   color: #007bff;
-  font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
-  /* font-size: 24px; font-style: normal;  */
   font-variant: normal; 
   font-weight: 700; 
   line-height: 26.4px;
