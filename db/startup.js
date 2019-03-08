@@ -1,10 +1,11 @@
-var pguser = 'postgres';
-var pgdb = 'schedplore';
 //Sets up DB connection with Sequelize
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize(pgdb, pguser, 'password', {
-  host: 'localhost',
+var sequelize = new Sequelize(process.env.DB_URL, {
   dialect: 'postgres',
+
+  dialectOptions: {
+    ssl: true
+  },
 
   pool: {
     max: 10,

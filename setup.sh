@@ -13,5 +13,8 @@ psql -d schedplore postgres -c "DROP TABLE IF EXISTS city;
                         address TEXT,
                         lat NUMERIC,
                         lng NUMERIC,
-                        hours NUMERIC [][]
+                        hours NUMERIC [][],
+                        photo_reference TEXT,
+                        photo TEXT,
+                        type TEXT
                       )"

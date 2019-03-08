@@ -10,6 +10,8 @@ var City = city(sequelize, Sequelize);
 
 function retrievePlaces(city, callback) {
     City.getCity(city, function (city) {
+        console.log('in retrieve');
+        console.log(city);
         var placeIds = city['dataValues']['place_ids'];
         var newPlaces = [];
         placeIds.forEach(function (placeId) {
@@ -31,15 +33,28 @@ module.exports = {
     // Layer 3: Place Objects
     createScheduleOptions: function (city, callback) {
         retrievePlaces(city, function (places) {
-            let scheduleOptions = Array(7).fill().map(() => Array(24).fill().map(() => Array()));
-            for (var i = 0; i < places.length; i++) {
-                let hours = places[i].hours;
-                for (var j = 0; j < hours.length; j++) {
-                    for (var k = 0; k < hours[j].length; k++) {
-                        if (hours[j][k]) {
-                            scheduleOptions[j][k].push(places[i]);
+            let scheduleOptions = [...Array(7)].map(e => Array(24));
+    
+            for (let day = 0; day < 7; day++) {
+                for (let hour = 0; hour < 24; hour++) {
+                    let openPlaces = [];
+                    places.map((place) => {
+                        if (place.hours[day][hour] === "1") {
+                            let newPlace = {};
+                            newPlace.id = place.id;
+                            newPlace.name = place.name;
+                            newPlace.rating = place.rating;
+                            newPlace.address = place.address;
+                            newPlace.lat = place.lat;
+                            newPlace.lng = place.lng;
+                            newPlace.photo_reference = place.photo_reference;
+                            newPlace.photo = place.photo;
+                            newPlace.type = place.type;
+                            openPlaces.push(newPlace);
                         }
-                    }
+                    });
+    
+                    scheduleOptions[day][hour] = openPlaces;
                 }
             }
             callback(scheduleOptions);

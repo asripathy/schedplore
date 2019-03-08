@@ -6,7 +6,9 @@
   "scripts": {
     "build": "./setup.sh",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "server": "nodemon index.js",
+    "client": "cd client && npm start",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -18,11 +20,26 @@
     "url": "https://github.com/asripathy/schedplore/issues"
   },
   "homepage": "https://github.com/asripathy/schedplore#readme",
+  "engines": {
+    "node": "8.9.1",
+    "npm": "5.5.1"
+  },
   "dependencies": {
+    "concurrently": "^3.5.1",
+    "create-react-app": "^1.5.2",
     "express": "^4.16.2",
     "https": "~1.0.0",
+    "moment": "^2.23.0",
+    "nodemon": "^1.17.4",
     "pg": "^7.4.1",
     "pg-format": "^1.0.4",
+    "react-big-calendar": "^0.20.3",
+    "react-places-autocomplete": "^7.1.1",
     "sequelize": "^4.33.4"
+  },
+  "devDependencies": {
+    "dotenv": "^6.2.0",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.4"
   }
 }
