@@ -27,6 +27,9 @@ module.exports = function (sequelize, Sequelize) {
     },
     photo: {
       type: Sequelize.TEXT
+    },
+    type: {
+      type: Sequelize.TEXT
     }
   }, {
       timestamps: false,
@@ -56,7 +59,7 @@ module.exports = function (sequelize, Sequelize) {
   // Place.addPlace('456', 'berkeley', 3.0, 'durant ave.', 122.03, -33.2, function(place) {
   //   console.log(place);
   // });
-  place.addPlace = function (id, name, rating, address, lat, lng, hours, photo_reference, photo, callback) {
+  place.addPlace = function (id, name, rating, address, lat, lng, hours, photo_reference, photo, type, callback) {
     var options = {
       id: id,
       name: name,
@@ -66,7 +69,8 @@ module.exports = function (sequelize, Sequelize) {
       lng: lng,
       hours: hours,
       photo_reference: photo_reference,
-      photo: photo
+      photo: photo,
+      type: type
     };
 
     place.create(options).then(newPlace => {
@@ -80,7 +84,7 @@ module.exports = function (sequelize, Sequelize) {
   // Place.updatePlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
   //   console.log(rowsUpdated);
   // });
-  place.updatePlace = function (id, name, rating, address, lat, lng, hours, photo_reference, photo, callback) {
+  place.updatePlace = function (id, name, rating, address, lat, lng, hours, photo_reference, photo, type, callback) {
     var options = {
       id: id,
       name: name,
@@ -90,7 +94,8 @@ module.exports = function (sequelize, Sequelize) {
       lng: lng,
       hours: hours,
       photo_reference: photo_reference,
-      photo: photo
+      photo: photo,
+      type: type
     };
 
     place.update(options, { where: { id: id } }).then(numRowsUpdated => {
@@ -104,7 +109,7 @@ module.exports = function (sequelize, Sequelize) {
   // Place.upsertPlace('456', 'berkeley', 4.0, 'durant ave. 2', 122.03, -33.2, function(rowsUpdated) {
   //   console.log(rowsUpdated);
   // });
-  place.upsertPlace = function (id, name, rating, address, lat, lng, hours, photo_reference, photo, callback) {
+  place.upsertPlace = function (id, name, rating, address, lat, lng, hours, photo_reference, photo, type, callback) {
     var options = {
       id: id,
       name: name,
@@ -114,7 +119,8 @@ module.exports = function (sequelize, Sequelize) {
       lng: lng,
       hours: hours,
       photo_reference,
-      photo: photo
+      photo: photo,
+      type: type
     };
 
     place.upsert(options, { where: { id: id } }).then(created => {
@@ -125,7 +131,7 @@ module.exports = function (sequelize, Sequelize) {
     });
   };
 
-  place.upsertPlacePromise = function (id, name, rating, address, lat, lng, hours, photo_reference, photo) {
+  place.upsertPlacePromise = function (id, name, rating, address, lat, lng, hours, photo_reference, photo, type) {
     var options = {
       id: id,
       name: name,
@@ -135,7 +141,8 @@ module.exports = function (sequelize, Sequelize) {
       lng: lng,
       hours: hours,
       photo_reference: photo_reference,
-      photo: photo
+      photo: photo,
+      type: type
     };
 
     return new Promise(function (resolve, reject) {

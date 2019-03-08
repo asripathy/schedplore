@@ -28,7 +28,7 @@ app.get('/place/:place', function (req, res) {
   var place = req.params.place;
   City.getCity(place, function (city) {
     if (!city) {
-      getPlaces(res, place, 500, 'restaurant', () => {
+      getPlaces(res, place, () => {
         schedule.createScheduleOptions(place, function (sched) {
           res.send(sched);
         });
@@ -75,7 +75,7 @@ function getLatLng(city, callback) {
 }
 
 // wrapper function for getGooglePlaces
-function getPlaces(res, city, radius, type, callback) {
+function getPlaces(res, city, callback) {
   getLatLng(city, function (latlng) {
     // TODO do search sanitization
     cityName = city.substring(0, city.indexOf(','));
@@ -140,6 +140,7 @@ function getGooglePlaces(res, city, type, curPlaces, callback) {
         place['rating'] = result['rating'];
         place['lat'] = result['geometry']['location']['lat'];
         place['lng'] = result['geometry']['location']['lng'];
+        place['type'] = type;
         if (result['photos'] && result['photos'].length > 0 && result['photos'][0]['photo_reference']) {
           place['photo_reference'] = result['photos'][0]['photo_reference'];
         } else {
