@@ -1,8 +1,11 @@
 //Sets up DB connection with Sequelize
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
+var sequelize = new Sequelize(process.env.DB_URL, {
   dialect: 'postgres',
+
+  dialectOptions: {
+    ssl: true
+  },
 
   pool: {
     max: 10,

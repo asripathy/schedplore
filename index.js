@@ -294,7 +294,7 @@ function populateDB(city, places, callback) {
     var place = places[i];
     place_ids.push(place.place_id);
     // Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours);
-    promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours, place.photo_reference, place.photo));
+    promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours, place.photo_reference, place.photo, place.type));
   }
   promises.push(City.upsertCityPromise(city, place_ids));
 
