@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import './App.css';
 import PlaceList from './PlaceList.js';
-import BigCalendar from 'react-big-calendar'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
-import moment from 'moment'
+import BigCalendar from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import moment from 'moment';
 
 const localizer = BigCalendar.momentLocalizer(moment)
 
@@ -195,10 +195,21 @@ class App extends Component {
     let searcherrorstyles = !this.state.validSearch && !this.state.editingSearch
       ? { display: "block" }
       : { display: "none" };
+    let appstyles = !this.state.response 
+      ? { position: "absolute",
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '100%',
+          height: '50vh'} 
+      : {};
+    let appheaderstyles = !this.state.response 
+      ? { 'font-size': '50px'}
+      : { 'font-size': '35px'};
     return (
-      <div className="App">
+      <div className="App" style={appstyles}>
         <header className="App-header">
-          <h1 className="App-title"> Schedplore </h1>
+          <h1 className="App-title" style={appheaderstyles}> Schedplore </h1>
         </header>
 
         {!this.state.response && !this.state.loadingResults &&
@@ -305,7 +316,7 @@ class App extends Component {
                     <div>
                       <p className="listText"> {this.generateRangeForCurentTimeSlot()}</p>
                       <div className="type-buttons row">
-                          <div className="btn-group btn-group-toggle offset-md-4" data-toggle="buttons">
+                          <div className="btn-group btn-group-toggle col-md-8 offset-md-2" data-toggle="buttons">
                               <label className="btn btn-light active col-md-4" onClick={this.handleTypeChange}>
                                   <input type="radio" name="placeType" value="food" autocomplete="off" checked /> <p className="tabText"> Food </p>
                               </label>
