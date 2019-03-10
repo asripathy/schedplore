@@ -90,12 +90,13 @@ class App extends Component {
   handleChange = (address) => {
     this.setState({editingSearch: true});
     this.setState({validSearch: false});
-    this.setState({ address })
+    this.setState({ address });
   }
 
   handleSelect = (address) => {
     this.setState({editingSearch: true});
     this.setState({validSearch: true});
+    this.setState({ address });
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
       .then(latLng => console.log('Success', latLng))
