@@ -80,9 +80,8 @@ function getLatLng(city, callback) {
 function getPlaces(res, city, callback) {
   getLatLng(city, function (latlng) {
     // TODO do search sanitization
-    cityName = city.substring(0, city.indexOf(','));
-    getGooglePlaces(res, cityName, 'food', [], function(restaurants) {
-      getGooglePlaces(res, cityName, 'attraction', restaurants, function(allPlaces) {
+    getGooglePlaces(res, city, 'food', [], function(restaurants) {
+      getGooglePlaces(res, city, 'attraction', restaurants, function(allPlaces) {
           getPlacePhotos(allPlaces, function (placesWithPhotos) {
             getPlaceHours(placesWithPhotos, function (finalPlaces) {
               populateDB(city, finalPlaces, callback);
