@@ -19,6 +19,7 @@ class App extends Component {
       selectedStartDate: '',
       selectedEndDate: '',
       modalVisible: false,
+      slotHighlightVisible: false,
       selectedEvent: {},
       selectedType: 'food',
       validSearch: false,
@@ -59,6 +60,7 @@ class App extends Component {
        }
      )
      console.log(updatedEvents);
+    this.setState({slotHighlightVisible: false});
     this.setState({events : updatedEvents})
   }
 
@@ -101,10 +103,11 @@ class App extends Component {
   }
 
   onSlotChange = (slotInfo) => {
-    var startDate = moment(slotInfo.start.toLocaleString()).toDate();
-    var endDate = moment(slotInfo.end.toLocaleString()).toDate();
+    var startDate = slotInfo.start;
+    var endDate = slotInfo.end;
     this.setState({selectedStartDate: startDate});
     this.setState({selectedEndDate: endDate});
+    this.setState({slotHighlightVisible: true});
     var startDay = startDate.getDay();
     var startHour = startDate.getHours();
     var endHour = endDate.getHours();
@@ -121,6 +124,16 @@ class App extends Component {
       openPlaces = updatedPlaces;
     }
     this.setState({response_hour: JSON.stringify(openPlaces)})
+  }
+
+  slotStyleGetter = (date) => {
+    if (this.state.slotHighlightVisible && this.state.selectedStartDate && this.state.selectedEndDate &&
+      date.getTime() >= this.state.selectedStartDate.getTime() &&
+      date.getTime() < this.state.selectedEndDate.getTime()) {
+      return {
+        className: 'selectedSlot'
+      };
+    }
   }
 
   onSelectEvent = (event) => {
@@ -204,8 +217,8 @@ class App extends Component {
           height: '50vh'} 
       : {};
     let appheaderstyles = !this.state.response 
-      ? { 'font-size': '50px'}
-      : { 'font-size': '35px'};
+      ? { 'fontSize': '50px'}
+      : { 'fontSize': '35px'};
     return (
       <div className="App" style={appstyles}>
         <header className="App-header">
@@ -236,8 +249,8 @@ class App extends Component {
                           <button className="btn btn-primary" onClick={this.callApi}> Search </button>
                         </span>
                       </div>
-                      <div class="warning-container" style={searcherrorstyles}>
-                        <p class="warning-text"> Please select a city using the dropdown. </p>
+                      <div className="warning-container" style={searcherrorstyles}>
+                        <p className="warning-text"> Please select a city using the dropdown. </p>
                       </div>
                     </div>
                   </div>
@@ -265,7 +278,7 @@ class App extends Component {
         }
 
         {this.state.loadingResults &&
-          <div class="loader"></div>
+          <div className="loader"></div>
         }
         
         {this.state.response &&
@@ -277,13 +290,14 @@ class App extends Component {
                 <div className="big-cal">
                   <BigCalendar
                     selectable
-                    onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
-                    onSelectEvent={(event) => this.onSelectEvent(event) }
+                    onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo)}
+                    onSelectEvent={(event) => this.onSelectEvent(event)}
                     views={['week', 'day', 'agenda']}
                     localizer={localizer}
                     events={this.state.events}
                     defaultDate={new Date()}
                     defaultView="week"
+                    slotPropGetter={(date) => this.slotStyleGetter(date)}
                     step={60}
                     timeslots={1}
                   />
@@ -318,10 +332,10 @@ class App extends Component {
                       <div className="type-buttons row">
                           <div className="btn-group btn-group-toggle col-md-8 offset-md-2" data-toggle="buttons">
                               <label className="btn btn-light active col-md-4" onClick={this.handleTypeChange}>
-                                  <input type="radio" name="placeType" value="food" autocomplete="off" checked /> <p className="tabText"> Food </p>
+                                  <input type="radio" name="placeType" value="food" autoComplete="off" checked /> <p className="tabText"> Food </p>
                               </label>
                               <label className="btn btn-light col-md-8" onClick={this.handleTypeChange}>
-                                  <input type="radio" name="placeType" value="attraction" autocomplete="off" /> <p className="tabText"> Attractions </p> 
+                                  <input type="radio" name="placeType" value="attraction" autoComplete="off" /> <p className="tabText"> Attractions </p> 
                               </label>
                           </div> 
                       </div>

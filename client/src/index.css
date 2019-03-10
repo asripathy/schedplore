@@ -43,6 +43,11 @@ body {
   padding-left: 30px;
 }
 
+.selectedSlot {
+  background-color: black;
+  opacity: 0.5;
+}
+
 .event-modal {
   position: relative;
   top: 30%;
@@ -133,7 +138,6 @@ td, th {
 .input-group > .input-group-btn > .btn .glyphicon{
   margin-right:12px;   
 }    
-
 
 .input-group > .form-control {
   font-size: 18px;
