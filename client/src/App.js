@@ -216,10 +216,10 @@ class App extends Component {
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '100%',
-          height: '50vh'} 
+          height: '50vh' }
       : {};
     let appheaderstyles = !this.state.response 
-      ? { 'fontSize': '50px'}
+      ? { 'fontSize': '50px' }
       : { 'fontSize': '35px'};
     return (
       <div className="App" style={appstyles}>
@@ -258,7 +258,7 @@ class App extends Component {
                   </div>
                   <div className="row">
                     <div className="col-md-8 offset-md-2">
-                      <div className="autocomplete-dropdown-container search-bar-group">
+                      <div className="autocomplete-dropdown-container">
                         {suggestions.map(suggestion => {
                           const className = suggestion.active ? 'suggestion-item-active' : 'suggestion-item';
                           return (
@@ -330,7 +330,7 @@ class App extends Component {
                     <div>
                       <p className="listText"> {this.generateRangeForCurentTimeSlot()}</p>
                       <div className="type-buttons row">
-                          <div className="btn-group btn-group-toggle col-md-8 offset-md-2" data-toggle="buttons">
+                          <div className="btn-group btn-group-toggle col-md-10 offset-md-1" data-toggle="buttons">
                               <label className="btn btn-light active col-md-4" onClick={this.handleTypeChange}>
                                   <input type="radio" name="placeType" value="food" autoComplete="off" checked /> <p className="tabText"> Food </p>
                               </label>
