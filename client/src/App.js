@@ -238,7 +238,7 @@ class App extends Component {
               {({ getInputProps, suggestions, getSuggestionItemProps }) => (
                 <div>
                   <div className="row">
-                    <div className="col-md-4 offset-md-4 mt-5">
+                    <div className="col-md-6 offset-md-3 mt-5">
                       <div className="input-group">
                         <input
                           {...getInputProps({
@@ -257,7 +257,7 @@ class App extends Component {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="autocomplete-dropdown-container col-md-4 offset-md-4">
+                    <div className="autocomplete-dropdown-container col-md-6 offset-md-3">
                       {suggestions.map(suggestion => {
                         const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
                         // inline style for demonstration purpose
