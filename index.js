@@ -6,9 +6,9 @@ var port = process.env.PORT || 5000;
 require('dotenv').config();
 var google_key = process.env.GOOGLE_API_KEY;
 
-const place = require('./db/place.js');
-const city = require('./db/city.js');
-const startup = require('./db/startup.js');
+const place = require('./models/place.js');
+const city = require('./models/city.js');
+const startup = require('./config/startup.js');
 const Sequelize = startup.Sequelize;
 const sequelize = startup.sequelize;
 

@@ -30,8 +30,7 @@ body {
 }
 
 .big-cal-container {
-  height: 85vh;
-  overflow-y: scroll;
+  padding-right: 0;
 }
 
 .big-cal-container:hover {
@@ -40,6 +39,12 @@ body {
 
 .big-cal {
   padding-left: 30px;
+  height: 85vh;
+}
+
+.selectedSlot {
+  background-color: black;
+  opacity: 0.5;
 }
 
 .event-modal {
@@ -53,17 +58,22 @@ body {
 }
 
 .place-list-view {
-  height: 76vh;
+  height: 72.5vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
 .place-list {
-  padding-right: 30px;
+  padding-right: 15px;
 }
 
 .place-list-table {
   border: 1px solid #DDD;
+}
+
+.place-list-row {
+  margin-right: 6px;
+  margin-left: 6px;
 }
 
 .card-img-top {
@@ -74,6 +84,7 @@ body {
 
 .card-cell {
   border: none;
+  display: block;
 }
 
 .place-card:hover {
@@ -103,7 +114,6 @@ body {
 }
 
 table {
-  font-family:arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
@@ -113,6 +123,7 @@ td, th {
   border:1px solid #dddddd;
   text-align: left;
   padding: 8px;
+  font-size: 17px;
 }
 
 .input-group > .form-control {
@@ -120,16 +131,15 @@ td, th {
 }
 .input-group > .input-group-btn > .btn{
   height: 40px; 
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 300;   
 }
 .input-group > .input-group-btn > .btn .glyphicon{
   margin-right:12px;   
 }    
 
-
 .input-group > .form-control {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 300;
 }
 

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import './App.css';
 import PlaceList from './PlaceList.js';
-import BigCalendar from 'react-big-calendar'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
-import moment from 'moment'
+import BigCalendar from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import moment from 'moment';
 
 const localizer = BigCalendar.momentLocalizer(moment)
 
@@ -19,6 +19,7 @@ class App extends Component {
       selectedStartDate: '',
       selectedEndDate: '',
       modalVisible: false,
+      slotHighlightVisible: false,
       selectedEvent: {},
       selectedType: 'food',
       validSearch: false,
@@ -59,6 +60,7 @@ class App extends Component {
        }
      )
      console.log(updatedEvents);
+    this.setState({slotHighlightVisible: false});
     this.setState({events : updatedEvents})
   }
 
@@ -88,12 +90,13 @@ class App extends Component {
   handleChange = (address) => {
     this.setState({editingSearch: true});
     this.setState({validSearch: false});
-    this.setState({ address })
+    this.setState({ address });
   }
 
   handleSelect = (address) => {
     this.setState({editingSearch: true});
     this.setState({validSearch: true});
+    this.setState({ address });
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
       .then(latLng => console.log('Success', latLng))
@@ -101,10 +104,11 @@ class App extends Component {
   }
 
   onSlotChange = (slotInfo) => {
-    var startDate = moment(slotInfo.start.toLocaleString()).toDate();
-    var endDate = moment(slotInfo.end.toLocaleString()).toDate();
+    var startDate = slotInfo.start;
+    var endDate = slotInfo.end;
     this.setState({selectedStartDate: startDate});
     this.setState({selectedEndDate: endDate});
+    this.setState({slotHighlightVisible: true});
     var startDay = startDate.getDay();
     var startHour = startDate.getHours();
     var endHour = endDate.getHours();
@@ -123,6 +127,16 @@ class App extends Component {
     this.setState({response_hour: JSON.stringify(openPlaces)})
   }
 
+  slotStyleGetter = (date) => {
+    if (this.state.slotHighlightVisible && this.state.selectedStartDate && this.state.selectedEndDate &&
+      date.getTime() >= this.state.selectedStartDate.getTime() &&
+      date.getTime() < this.state.selectedEndDate.getTime()) {
+      return {
+        className: 'selectedSlot'
+      };
+    }
+  }
+
   onSelectEvent = (event) => {
     this.setState({selectedEvent: event});
     this.toggleModal();
@@ -131,6 +145,7 @@ class App extends Component {
   clearSearch = () => {
     this.setState({response: ''});
     this.setState({response_hour: ''});
+    this.setState({slotHighlightVisible: false});
     this.clearCalendar();
   }
 
@@ -195,10 +210,21 @@ class App extends Component {
     let searcherrorstyles = !this.state.validSearch && !this.state.editingSearch
       ? { display: "block" }
       : { display: "none" };
+    let appstyles = !this.state.response 
+      ? { position: "absolute",
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '100%',
+          height: '50vh'} 
+      : {};
+    let appheaderstyles = !this.state.response 
+      ? { 'fontSize': '50px'}
+      : { 'fontSize': '35px'};
     return (
-      <div className="App">
+      <div className="App" style={appstyles}>
         <header className="App-header">
-          <h1 className="App-title"> Schedplore </h1>
+          <h1 className="App-title" style={appheaderstyles}> Schedplore </h1>
         </header>
 
         {!this.state.response && !this.state.loadingResults &&
@@ -212,7 +238,7 @@ class App extends Component {
               {({ getInputProps, suggestions, getSuggestionItemProps }) => (
                 <div>
                   <div className="row">
-                    <div className="col-md-4 offset-md-4 mt-5">
+                    <div className="col-md-6 offset-md-3 mt-5">
                       <div className="input-group">
                         <input
                           {...getInputProps({
@@ -225,13 +251,13 @@ class App extends Component {
                           <button className="btn btn-primary" onClick={this.callApi}> Search </button>
                         </span>
                       </div>
-                      <div class="warning-container" style={searcherrorstyles}>
-                        <p class="warning-text"> Please select a city using the dropdown. </p>
+                      <div className="warning-container" style={searcherrorstyles}>
+                        <p className="warning-text"> Please select a city using the dropdown. </p>
                       </div>
                     </div>
                   </div>
                   <div className="row">
-                    <div className="autocomplete-dropdown-container col-md-4 offset-md-4">
+                    <div className="autocomplete-dropdown-container col-md-6 offset-md-3">
                       {suggestions.map(suggestion => {
                         const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
                         // inline style for demonstration purpose
@@ -254,7 +280,7 @@ class App extends Component {
         }
 
         {this.state.loadingResults &&
-          <div class="loader"></div>
+          <div className="loader"></div>
         }
         
         {this.state.response &&
@@ -266,15 +292,16 @@ class App extends Component {
                 <div className="big-cal">
                   <BigCalendar
                     selectable
-                    onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo) }
-                    onSelectEvent={(event) => this.onSelectEvent(event) }
-                    views={['week', 'day', 'agenda']}
                     localizer={localizer}
                     events={this.state.events}
-                    defaultDate={new Date()}
-                    defaultView="week"
+                    views={['week', 'day', 'agenda']}
                     step={60}
                     timeslots={1}
+                    defaultView={BigCalendar.Views.WEEK}
+                    scrollToTime={new Date(1970, 1, 1, 10)}
+                    onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo)}
+                    onSelectEvent={(event) => this.onSelectEvent(event)}
+                    slotPropGetter={(date) => this.slotStyleGetter(date)}
                   />
                 </div>
                 <div className="modal" role="dialog" tabIndex='-1' style={modalstyles}>
@@ -305,17 +332,17 @@ class App extends Component {
                     <div>
                       <p className="listText"> {this.generateRangeForCurentTimeSlot()}</p>
                       <div className="type-buttons row">
-                          <div className="btn-group btn-group-toggle offset-md-4" data-toggle="buttons">
+                          <div className="btn-group btn-group-toggle col-md-8 offset-md-2" data-toggle="buttons">
                               <label className="btn btn-light active col-md-4" onClick={this.handleTypeChange}>
-                                  <input type="radio" name="placeType" value="food" autocomplete="off" checked /> <p className="tabText"> Food </p>
+                                  <input type="radio" name="placeType" value="food" autoComplete="off" checked /> <p className="tabText"> Food </p>
                               </label>
                               <label className="btn btn-light col-md-8" onClick={this.handleTypeChange}>
-                                  <input type="radio" name="placeType" value="attraction" autocomplete="off" /> <p className="tabText"> Attractions </p> 
+                                  <input type="radio" name="placeType" value="attraction" autoComplete="off" /> <p className="tabText"> Attractions </p> 
                               </label>
                           </div> 
                       </div>
                       <div className="place-list-view">
-                      <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar} selectedType={this.state.selectedType}/>
+                        <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar} selectedType={this.state.selectedType}/>
                       </div>
                     </div>
                   }
