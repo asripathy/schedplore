@@ -5,7 +5,6 @@ Schedplore allows you to discover restaurants and places to visit, and then crea
 Built in Node.js (Express, PostgreSQL) with React front-end. 
 
 ## Set-Up
-----
 
 Run the following to install the required node modules. 
 
@@ -18,7 +17,6 @@ npm install
 You will need to have Postgres installed, as well as a Postgres instance to run the app. Run the command found in the setup.sql (under the config folder) within your database to configure the tables correctly.
 
 ## Running Locally
----
 
 In the root directory, create a file called .env and copy in the following:
 
