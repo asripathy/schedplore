@@ -237,9 +237,9 @@ class App extends Component {
             >
               {({ getInputProps, suggestions, getSuggestionItemProps }) => (
                 <div>
-                  <div className="row">
-                    <div className="col-md-6 offset-md-3 mt-5">
-                      <div className="input-group">
+                  <div className="search-bar-container row">
+                    <div  className="col-md-8 offset-md-2">
+                      <div className="input-group search-bar-group">
                         <input
                           {...getInputProps({
                             placeholder: 'Search for a City',
@@ -257,19 +257,17 @@ class App extends Component {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="autocomplete-dropdown-container col-md-6 offset-md-3">
-                      {suggestions.map(suggestion => {
-                        const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                        // inline style for demonstration purpose
-                        const style = suggestion.active
-                          ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                          : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                        return (
-                          <div {...getSuggestionItemProps(suggestion, { className, style })}>
-                            <span>{suggestion.description}</span>
-                          </div>
-                        )
-                      })}
+                    <div className="col-md-8 offset-md-2">
+                      <div className="autocomplete-dropdown-container search-bar-group">
+                        {suggestions.map(suggestion => {
+                          const className = suggestion.active ? 'suggestion-item-active' : 'suggestion-item';
+                          return (
+                            <div {...getSuggestionItemProps(suggestion, { className })}>
+                              <span>{suggestion.description}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
