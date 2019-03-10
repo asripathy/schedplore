@@ -290,16 +290,16 @@ class App extends Component {
                 <div className="big-cal">
                   <BigCalendar
                     selectable
-                    onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo)}
-                    onSelectEvent={(event) => this.onSelectEvent(event)}
-                    views={['week', 'day', 'agenda']}
                     localizer={localizer}
                     events={this.state.events}
-                    defaultDate={new Date()}
-                    defaultView="week"
-                    slotPropGetter={(date) => this.slotStyleGetter(date)}
+                    views={['week', 'day', 'agenda']}
                     step={60}
                     timeslots={1}
+                    defaultView={BigCalendar.Views.WEEK}
+                    scrollToTime={new Date(1970, 1, 1, 10)}
+                    onSelectSlot={(slotInfo) => this.onSlotChange(slotInfo)}
+                    onSelectEvent={(event) => this.onSelectEvent(event)}
+                    slotPropGetter={(date) => this.slotStyleGetter(date)}
                   />
                 </div>
                 <div className="modal" role="dialog" tabIndex='-1' style={modalstyles}>
