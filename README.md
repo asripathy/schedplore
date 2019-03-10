@@ -14,7 +14,7 @@ cd client
 npm install
 ```
 
-You will need to have Postgres installed, as well as a Postgres instance to run the app. Run the command found in the setup.sql (under the config folder) within your database to configure the tables correctly.
+You will need to have Postgres installed, as well as a Postgres instance to run the app. Run the command found in setup.sql (under the config folder) to configure the tables in your database correctly.
 
 ## Running Locally
 
