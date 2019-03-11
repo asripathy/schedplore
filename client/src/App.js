@@ -153,6 +153,8 @@ class App extends Component {
 
   resetSearch = () => {
     this.setState({address: ''});
+    this.setState({editingSearch: true});
+    this.setState({validSearch: false});
     this.clearSearch();
   }
 
