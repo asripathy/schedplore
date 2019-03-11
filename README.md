@@ -27,10 +27,16 @@ DB_URL={POSTGRES_URI}
 Where YOUR_GOOGLE_API_KEY corresponds to your Google API Key (for Google Places) and
 POSTGRES_URI corresponds to the connection URI for your Postgres instance. 
 
-To run the app, simply run:
+Inside client/public/index.html, update the Google API script with your Google API Key:
+
+```html
+      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={YOUR_GOOGLE_API_KEY}&libraries=places"></script>
+```
+
+Finally, To run the app, simply run:
 
 ```terminal
 npm run dev
 ```
 
-Visit http://localhost:3000/. The app should now be up and running!
+The app should now be up and running!
