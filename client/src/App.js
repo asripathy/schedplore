@@ -231,7 +231,7 @@ class App extends Component {
     return (
       <div className="App" style={appstyles}>
         <header className="App-header" style={appheaderstyles}>
-          <h1 className="App-title" style={apptitlestyles}> Schedplore </h1>
+          <h1 className="App-title" style={apptitlestyles} onClick={this.clearSearch}> Schedplore </h1>
         </header>
 
         {!this.state.response && !this.state.loadingResults &&
@@ -247,7 +247,7 @@ class App extends Component {
                   <div className="search-bar-container row">
                     <div  className="col-md-8 offset-md-2">
                       <div className="input-group search-bar-group">
-                        <input
+                        <input spellcheck="false"
                           {...getInputProps({
                             placeholder: 'Search for a City',
                             className: 'form-control location-search-input',

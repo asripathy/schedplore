@@ -78,18 +78,15 @@ function getLatLng(city, callback) {
 
 // wrapper function for getGooglePlaces
 function getPlaces(res, city, callback) {
-  getLatLng(city, function (latlng) {
-    // TODO do search sanitization
-    getGooglePlaces(res, city, 'food', [], function(restaurants) {
-      getGooglePlaces(res, city, 'attraction', restaurants, function(allPlaces) {
-          getPlacePhotos(allPlaces, function (placesWithPhotos) {
-            getPlaceHours(placesWithPhotos, function (finalPlaces) {
-              populateDB(city, finalPlaces, callback);
-            });
-        });
+  // TODO do search sanitization
+  getGooglePlaces(res, city, 'food', [], function(restaurants) {
+    getGooglePlaces(res, city, 'attraction', restaurants, function(allPlaces) {
+        getPlacePhotos(allPlaces, function (placesWithPhotos) {
+          getPlaceHours(placesWithPhotos, function (finalPlaces) {
+            populateDB(city, finalPlaces, callback);
+          });
       });
     });
-    
   });
 }
 
