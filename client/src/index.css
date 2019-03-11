@@ -230,7 +230,7 @@ td, th {
 
 @media screen and (max-width: 450px) {
   .app-navbar {
-    height: 100px;
+    height: 105px;
   }
   .big-cal-container {
     margin-top: 90px;
