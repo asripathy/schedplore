@@ -1,6 +1,6 @@
 //Sets up DB connection with Sequelize
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize(process.env.DB_URL, {
+var sequelize = new Sequelize(process.env.DB_URI, {
   dialect: 'postgres',
 
   dialectOptions: {

@@ -22,7 +22,7 @@ In the root directory, create a file called .env and copy in the following:
 
 ```txt
 GOOGLE_API_KEY={YOUR_GOOGLE_API_KEY}
-DB_URL={POSTGRES_URI}
+DB_URI={POSTGRES_URI}
 ```
 Where YOUR_GOOGLE_API_KEY corresponds to your Google API Key (for Google Places) and
 POSTGRES_URI corresponds to the connection URI for your Postgres instance. 
