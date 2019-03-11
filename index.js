@@ -1,5 +1,6 @@
 var https = require('https')
 var express = require('express');
+const path = require('path');
 var app = express();
 var port = process.env.PORT || 5000;
 
@@ -17,9 +18,21 @@ var Place = place(sequelize, Sequelize);
 var City = city(sequelize, Sequelize);
 var schedule = require('./controllers/schedule.js');
 
-app.get('/', function (req, res) {
-  res.sendfile('./views/index.html');
-});
+//Static file declaration
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+//production mode
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  
+  app.get('/', (req, res) => {
+    res.sendfile(path.join(__dirname = 'client/build/index.html'));
+  })
+}
+//build mode
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/public/index.html'));
+})
 
 app.get('/place/:place', function (req, res) {
   var place = req.params.place;
@@ -159,14 +172,12 @@ function getPlaceHours(places, callback) {
     var url = "https://maps.googleapis.com/maps/api/place/details/json?key=" + google_key + "&placeid=" + place['place_id'];
     https.get(url, function (resp) {
       var data = '';
-
       resp.on('data', function (chunk) {
         data += chunk;
       });
 
       resp.on('end', function () {
         hours = JSON.parse(data);
-
         // only call parse hours if the place has hours
         if (!hours['result']['opening_hours'] || !hours['result']['opening_hours']['periods']) {
           original_places_len -= 1;

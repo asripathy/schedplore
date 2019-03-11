@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "./setup.sh",
+    "client-install": "cd client && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index.js",
     "client": "cd client && npm start",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start": "node index.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd client && npm install && npm run build"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "https": "~1.0.0",
     "moment": "^2.23.0",
     "nodemon": "^1.17.4",
+    "path": "^0.12.7",
     "pg": "^7.4.1",
     "pg-format": "^1.0.4",
     "react-big-calendar": "^0.20.3",
