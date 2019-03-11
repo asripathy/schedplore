@@ -12,17 +12,12 @@ const startup = require('./config/startup.js');
 const Sequelize = startup.Sequelize;
 const sequelize = startup.sequelize;
 
-
+// Models
 var Place = place(sequelize, Sequelize);
 var City = city(sequelize, Sequelize);
-var schedule = require('./schedule.js');
+var schedule = require('./controllers/schedule.js');
 
 app.get('/', function (req, res) {
-  // getPlaces(res, 'San Jose', 500, 'restaurant');
-  // TODO make sure this gets called at appropriate time
-  // schedule.createScheduleOptions('San Jose', function(sched) {
-  //   res.send(sched);
-  // });
   res.sendfile('./views/index.html');
 });
 
@@ -47,38 +42,8 @@ app.listen(port, function () {
   console.log('listening on: ' + port);
 });
 
-
-// converts city to lat,lng string
-function getLatLng(city, callback) {
-  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=' + google_key;
-  https.get(url, function (resp) {
-    var data = '';
-
-    resp.on('data', function (chunk) {
-      data += chunk;
-    });
-
-    resp.on('end', function () {
-      data = JSON.parse(data);
-      if (data['status'] != 'OK') {
-        console.log("ERROR: No Results Found");
-        //zero results handling
-      }
-      else {
-        latlng = data['results'][0].geometry.location.lat + ',' + data['results'][0].geometry.location.lng;
-        callback(latlng);
-      }
-    });
-
-  }).on("error", function (err) {
-    console.log("Error: " + err.message);
-  });
-
-}
-
 // wrapper function for getGooglePlaces
 function getPlaces(res, city, callback) {
-  // TODO do search sanitization
   getGooglePlaces(res, city, 'food', [], function(restaurants) {
     getGooglePlaces(res, city, 'attraction', restaurants, function(allPlaces) {
         getPlacePhotos(allPlaces, function (placesWithPhotos) {
@@ -125,13 +90,11 @@ function getGooglePlaces(res, city, type, curPlaces, callback) {
               formattedAbbrev = formattedAbbrev.substring(0, formattedAbbrev.length - 1);
             }
             place['address'] = formattedAbbrev;
-          }
-          else {
+          } else {
             place['address'] = formatted;
           }
-        }
-        else {
-          place['address'] = "";
+        } else {
+          place['address'] = null;
         }
         place['place_id'] = result['place_id'];
         place['name'] = result['name'];
@@ -146,22 +109,11 @@ function getGooglePlaces(res, city, type, curPlaces, callback) {
         }
         places.push(place);
       }
-
       callback(places);
     });
-
   }).on("error", function (err) {
     console.log("Error: " + err.message);
   });
-}
-
-/*Testing Function*/
-function prettyPrintHours(hours) {
-  for (var i = 0; i < 7; i++) {
-    console.log("lenn: " + hours[i].length);
-    console.log("Day " + i + ": ");
-    console.log(hours[i]);
-  }
 }
 
 function parseHours(periods, callback) {
@@ -199,11 +151,6 @@ function parseHours(periods, callback) {
   callback(hours);
 }
 
-function parseTime(time) {
-  var hour = parseInt(time.substring(0, 3));
-  return hour;
-}
-
 //Gets hours for place given place_id
 function getPlaceHours(places, callback) {
   newPlaces = [];
@@ -221,7 +168,6 @@ function getPlaceHours(places, callback) {
         hours = JSON.parse(data);
 
         // only call parse hours if the place has hours
-        console.log(hours)
         if (!hours['result']['opening_hours'] || !hours['result']['opening_hours']['periods']) {
           original_places_len -= 1;
           if (newPlaces.length == original_places_len) {
@@ -259,7 +205,6 @@ function getPlacePhotos(places, callback) {
         });
 
         resp.on('end', function () {
-          // TODO clean this up later
           var imgtag_index = data.indexOf('<A HREF="');
           if (imgtag_index == -1) {
             place['photo'] = null;
@@ -268,7 +213,6 @@ function getPlacePhotos(places, callback) {
             img_url = img_url.substr(0, img_url.indexOf('"'));
             place['photo'] = img_url;
           }
-          console.log(place.photo);
         })
       })
     }
@@ -281,15 +225,11 @@ function getPlacePhotos(places, callback) {
 }
 
 function populateDB(city, places, callback) {
-  console.log('IN POPULATE DB');
-  console.log(city);
-  console.log(places);
   place_ids = [];
   var promises = [];
   for (let i = 0; i < places.length; i++) {
     var place = places[i];
     place_ids.push(place.place_id);
-    // Place.upsertPlace(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours);
     promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours, place.photo_reference, place.photo, place.type));
   }
   promises.push(City.upsertCityPromise(city, place_ids));

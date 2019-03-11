@@ -1,17 +1,14 @@
-const place = require('./models/place.js');
-const city = require('./models/city.js');
-const startup = require('./config/startup.js');
+const place = require('../models/place.js');
+const city = require('../models/city.js');
+const startup = require('../config/startup.js');
 const Sequelize = startup.Sequelize;
 const sequelize = startup.sequelize;
-
 
 var Place = place(sequelize, Sequelize);
 var City = city(sequelize, Sequelize);
 
 function retrievePlaces(city, callback) {
     City.getCity(city, function (city) {
-        console.log('in retrieve');
-        console.log(city);
         var placeIds = city['dataValues']['place_ids'];
         var newPlaces = [];
         placeIds.forEach(function (placeId) {
@@ -34,7 +31,6 @@ module.exports = {
     createScheduleOptions: function (city, callback) {
         retrievePlaces(city, function (places) {
             let scheduleOptions = [...Array(7)].map(e => Array(24));
-    
             for (let day = 0; day < 7; day++) {
                 for (let hour = 0; hour < 24; hour++) {
                     let openPlaces = [];
@@ -53,7 +49,6 @@ module.exports = {
                             openPlaces.push(newPlace);
                         }
                     });
-    
                     scheduleOptions[day][hour] = openPlaces;
                 }
             }

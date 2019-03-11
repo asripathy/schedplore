@@ -8,7 +8,6 @@
   height: 80px;
 }
 
-
 @media screen and (max-width: 450px) {
   .App-header {
     margin-top: 65px!important;
@@ -24,6 +23,7 @@
   font-variant: normal; 
   font-weight: 700; 
   line-height: 26.4px;
+  cursor: pointer;
 }
 
 .App-intro {

@@ -33,18 +33,7 @@ class App extends Component {
     this.daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   }
 
-  toggleModal() {
-    const modalVisible = !this.state.modalVisible;
-    this.setState({
-      modalVisible
-    });
-  }
-
-  handleTypeChange(event) {
-      var type = event.currentTarget.querySelector("input").value;
-      this.setState({ selectedType: type });
-  }
-
+  // Calendar functions
   updateCalendar = (place) => {
     var updatedEvents = this.state.events;
     var address = {
@@ -58,49 +47,9 @@ class App extends Component {
          title: place.name,
          resource: address
        }
-     )
-     console.log(updatedEvents);
+     );
     this.setState({slotHighlightVisible: false});
     this.setState({events : updatedEvents})
-  }
-
-  deleteEvent = () => {
-    var updatedEvents = this.state.events;
-    var selectedEvent = this.state.selectedEvent;
-    updatedEvents.splice(updatedEvents.findIndex(v => v.title == selectedEvent.title && v.start == selectedEvent.start && v.end == selectedEvent.end), 1);
-    this.setState({events: updatedEvents});
-    this.toggleModal();
-  }
-
-  callApi = async () => {
-    this.setState({editingSearch: false});
-    if (this.state.validSearch) {
-      this.setState({loadingResults: true});
-      let city = this.state.address
-      if (city) {
-        const response = await fetch('/place/' + city);
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        this.setState({loadingResults: false});
-        this.setState({response: JSON.stringify(body)});
-      }
-    }
-  };
-
-  handleChange = (address) => {
-    this.setState({editingSearch: true});
-    this.setState({validSearch: false});
-    this.setState({ address });
-  }
-
-  handleSelect = (address) => {
-    this.setState({editingSearch: true});
-    this.setState({validSearch: true});
-    this.setState({ address });
-    geocodeByAddress(address)
-      .then(results => getLatLng(results[0]))
-      .then(latLng => console.log('Success', latLng))
-      .catch(error => console.error('Error', error))
   }
 
   onSlotChange = (slotInfo) => {
@@ -124,7 +73,7 @@ class App extends Component {
       }
       openPlaces = updatedPlaces;
     }
-    this.setState({response_hour: JSON.stringify(openPlaces)})
+    this.setState({open_places: JSON.stringify(openPlaces)})
   }
 
   slotStyleGetter = (date) => {
@@ -137,9 +86,69 @@ class App extends Component {
     }
   }
 
+  clearCalendar = () => {
+    this.setState({events: []});
+  }
+
+  // Event functions
+  toggleModal() {
+    const modalVisible = !this.state.modalVisible;
+    this.setState({
+      modalVisible
+    });
+  }
+
+  deleteEvent = () => {
+    var updatedEvents = this.state.events;
+    var selectedEvent = this.state.selectedEvent;
+    updatedEvents.splice(updatedEvents.findIndex(v => v.title == selectedEvent.title && v.start == selectedEvent.start && v.end == selectedEvent.end), 1);
+    this.setState({events: updatedEvents});
+    this.toggleModal();
+  }
+
   onSelectEvent = (event) => {
     this.setState({selectedEvent: event});
     this.toggleModal();
+  }
+
+  // Tab functions
+  handleTypeChange(event) {
+    var type = event.currentTarget.querySelector("input").value;
+    this.setState({ selectedType: type });
+  }
+
+  // Search functions
+  callApi = async () => {
+    this.setState({editingSearch: false});
+    if (this.state.validSearch) {
+      this.setState({loadingResults: true});
+      let city = this.state.address
+      if (city) {
+        const response = await fetch('/place/' + city);
+        const body = await response.json();
+        if (response.status !== 200) {
+          throw Error(body.message);
+        }
+        this.setState({loadingResults: false});
+        this.setState({response: JSON.stringify(body)});
+      }
+    }
+  };
+
+  handleChange = (address) => {
+    this.setState({editingSearch: true});
+    this.setState({validSearch: false});
+    this.setState({ address });
+  }
+
+  handleSelect = (address) => {
+    this.setState({editingSearch: true});
+    this.setState({validSearch: true});
+    this.setState({ address });
+    geocodeByAddress(address)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => console.log('Success', latLng))
+      .catch(error => console.error('Error', error))
   }
 
   resetSearch = () => {
@@ -149,27 +158,12 @@ class App extends Component {
 
   clearSearch = () => {
     this.setState({response: ''});
-    this.setState({response_hour: ''});
+    this.setState({open_places: ''});
     this.setState({slotHighlightVisible: false});
     this.clearCalendar();
   }
 
-  clearCalendar = () => {
-    this.setState({events: []});
-  }
-
-  addEvent = () => {
-    // var updatedEvents = this.state.events;
-    // updatedEvents.push(
-    //   {
-    //     start: new Date(),
-    //     end: new Date(moment().add(2, "hours")),
-    //     title: "New Event"
-    //   }
-    // )
-    // this.setState({events : updatedEvents})
-  }
-
+  // Formatting functions
   getTwelveHour = (hour) => {
     return hour % 12 == 0 ? 12 : hour % 12;
   }
@@ -205,8 +199,6 @@ class App extends Component {
   searchOptions = {
     types: ['(cities)']
   }
-
-  placeArr = ["Le Boulanger", "Quiznos", "Taco Bell"];
 
   render() {
     let modalstyles = this.state.modalVisible
@@ -339,7 +331,7 @@ class App extends Component {
               </div>
               <div className="place-list-container col-md-3 offset-md-0 col-sm-6 offset-sm-3">
                 <div className="place-list">
-                  {this.state.response_hour &&
+                  {this.state.open_places &&
                     <div>
                       <p className="listText"> {this.generateRangeForCurentTimeSlot()}</p>
                       <div className="type-buttons row">
@@ -353,12 +345,12 @@ class App extends Component {
                           </div> 
                       </div>
                       <div className="place-list-view">
-                        <PlaceList  places={this.state.response_hour} updateCalendar={this.updateCalendar} selectedType={this.state.selectedType}/>
+                        <PlaceList  places={this.state.open_places} updateCalendar={this.updateCalendar} selectedType={this.state.selectedType}/>
                       </div>
                     </div>
                   }
                 </div>
-                {!this.state.response_hour &&
+                {!this.state.open_places &&
                     <div className="emptyListMessage"> 
                       <p className="listText"> Select a time slot from the calendar </p>
                     </div>
@@ -367,12 +359,9 @@ class App extends Component {
             </div>                  
           </div>
         }
-        
-
       </div>
     );
   }
 }
-
 
 export default App;

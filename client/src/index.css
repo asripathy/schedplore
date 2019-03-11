@@ -4,6 +4,15 @@ body {
   font-family: sans-serif;
 }
 
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden; 
+}
+
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -19,15 +28,7 @@ body {
   -webkit-box-shadow: inset 0 0 6px rgba(90,90,90,0.7);
 }
 
-.tile-img {
-  height: 70;
-}
-
-.warning-text {
-  padding-top: 10px;
-  color: #cc0000;
-}
-
+/* Results Page */
 .back-button {
   position: fixed;
   top: 15px;
@@ -51,14 +52,11 @@ body {
   background-color: white;
 }
 
-.App-title {
-  cursor: pointer;
-}
-
 .cal-and-list {
   padding-top: 20px;
 }
 
+/* Calendar */
 .big-cal-container {
   margin-top: 70px;
   padding-right: 0;
@@ -73,11 +71,6 @@ body {
   height: 85vh;
 }
 
-.selectedSlot {
-  background-color: black;
-  opacity: 0.5;
-}
-
 .event-modal {
   position: relative;
   top: 30%;
@@ -88,6 +81,12 @@ body {
   font-size: 17px;
 }
 
+.selectedSlot {
+  background-color: black;
+  opacity: 0.5;
+}
+
+/* Place list */
 .place-list-view {
   height: 72.5vh;
   overflow-y: scroll;
@@ -159,6 +158,12 @@ td, th {
   font-size: 17px;
 }
 
+/* Search */
+.warning-text {
+  padding-top: 10px;
+  color: #cc0000;
+}
+
 .search-bar-container {
   margin-left: 0px;
   margin-right: 0px;
@@ -184,14 +189,13 @@ td, th {
 .input-group > .form-control {
   height: 50px;
 }
+
 .input-group > .input-group-btn > .btn{
   height: 50px; 
   font-size: 18px;
   font-weight: 300;   
+  margin-right:12px;
 }
-.input-group > .input-group-btn > .btn .glyphicon{
-  margin-right:12px;   
-}    
 
 .input-group > .form-control {
   font-size: 18px;
@@ -259,6 +263,7 @@ td, th {
   -webkit-animation: load6 1.7s infinite ease, round 1.7s infinite ease;
   animation: load6 1.7s infinite ease, round 1.7s infinite ease;
 }
+
 @-webkit-keyframes load6 {
   0% {
     box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
@@ -281,6 +286,7 @@ td, th {
     box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
   }
 }
+
 @keyframes load6 {
   0% {
     box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
@@ -303,6 +309,7 @@ td, th {
     box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
   }
 }
+
 @-webkit-keyframes round {
   0% {
     -webkit-transform: rotate(0deg);
@@ -313,6 +320,7 @@ td, th {
     transform: rotate(360deg);
   }
 }
+
 @keyframes round {
   0% {
     -webkit-transform: rotate(0deg);
@@ -322,13 +330,4 @@ td, th {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
-}
-
-
-html,body {
-    width: 100%;
-    height: 100%;
-    margin: 0px;
-    padding: 0px;
-    overflow-x: hidden; 
 }
