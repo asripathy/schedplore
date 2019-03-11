@@ -71,6 +71,9 @@ body {
   .big-cal-container {
     margin-top: 90px;
   }
+  .place-list {
+    padding-left: 15px;
+  }
 }
 
 .big-cal-container:hover {
