@@ -45,18 +45,6 @@ body {
   padding-right: 0;
 }
 
-@media screen and (max-width: 450px) {
-  .app-navbar {
-    height: 100px;
-  }
-  .big-cal-container {
-    margin-top: 90px;
-  }
-  .place-list {
-    padding-left: 15px;
-  }
-}
-
 .big-cal-container:hover {
   cursor: pointer;
 }
@@ -89,20 +77,12 @@ body {
 
 .place-list-container {
   margin-top: 70px;
-}
-
-@media screen and (max-width: 800px) {
-  .place-list-container {
-    margin-top: 20px;
-  }
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .place-list {
   padding-right: 15px;
-}
-
-.place-list-table {
-  border: 1px solid #DDD;
 }
 
 .place-list-row {
@@ -112,7 +92,7 @@ body {
 
 .card-img-top {
   width: 100%;
-  height: 12vw;
+  height: 13vw;
   object-fit: cover;
 }
 
@@ -218,6 +198,30 @@ td, th {
   padding: 3px;
   background-color: #ffffff;
   cursor: pointer;
+}
+
+@media screen and (max-width: 750px) {
+  .place-list-container {
+    margin-top: 20px;
+  }
+  .card-img-top {
+    height: 20vw;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .app-navbar {
+    height: 100px;
+  }
+  .big-cal-container {
+    margin-top: 90px;
+  }
+  .place-list {
+    padding-left: 15px;
+  }
+  .card-img-top {
+    height: 35vw;
+  }
 }
 
 .loader {
