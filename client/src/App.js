@@ -142,6 +142,11 @@ class App extends Component {
     this.toggleModal();
   }
 
+  resetSearch = () => {
+    this.setState({address: ''});
+    this.clearSearch();
+  }
+
   clearSearch = () => {
     this.setState({response: ''});
     this.setState({response_hour: ''});
@@ -231,7 +236,7 @@ class App extends Component {
     return (
       <div className="App" style={appstyles}>
         <header className="App-header" style={appheaderstyles}>
-          <h1 className="App-title" style={apptitlestyles} onClick={this.clearSearch}> Schedplore </h1>
+          <h1 className="App-title" style={apptitlestyles} onClick={this.resetSearch}> Schedplore </h1>
         </header>
 
         {!this.state.response && !this.state.loadingResults &&
