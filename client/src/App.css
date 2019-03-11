@@ -8,15 +8,15 @@
   height: 80px;
 }
 
+.App-header {
+  z-index: 5;
+}
+
 .App-title {
   color: #007bff;
   font-variant: normal; 
   font-weight: 700; 
   line-height: 26.4px;
-}
-
-.App-header {
-  padding-top: 3%;
 }
 
 .App-intro {

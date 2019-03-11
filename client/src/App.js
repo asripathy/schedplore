@@ -219,12 +219,19 @@ class App extends Component {
           height: '50vh' }
       : {};
     let appheaderstyles = !this.state.response 
+      ? {}
+      : { position: "absolute",
+          marginTop: '45px',
+          left: '50%',
+          transform: 'translate(-50%, 0)',
+      };
+    let apptitlestyles = !this.state.response 
       ? { 'fontSize': '50px' }
       : { 'fontSize': '35px'};
     return (
       <div className="App" style={appstyles}>
-        <header className="App-header">
-          <h1 className="App-title" style={appheaderstyles}> Schedplore </h1>
+        <header className="App-header" style={appheaderstyles}>
+          <h1 className="App-title" style={apptitlestyles}> Schedplore </h1>
         </header>
 
         {!this.state.response && !this.state.loadingResults &&
@@ -285,8 +292,9 @@ class App extends Component {
           <div>
             <button className="btn btn-light back-button" onClick={this.clearSearch}> Back to Search </button>
             <button className="btn btn-warning clear-calendar" onClick={this.clearCalendar}> Clear Calendar </button>
+            <div className="app-navbar" />
             <div className="row cal-and-list">
-              <div className="big-cal-container col-md-9">
+              <div className="big-cal-container col-md-9 col-sm-11">
                 <div className="big-cal">
                   <BigCalendar
                     selectable
@@ -324,7 +332,7 @@ class App extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3">
+              <div className="place-list-container col-md-3 offset-md-0 col-sm-6 offset-sm-3">
                 <div className="place-list">
                   {this.state.response_hour &&
                     <div>

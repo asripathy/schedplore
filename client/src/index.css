@@ -17,12 +17,23 @@ body {
   position: fixed;
   top: 15px;
   left: 15px;
+  z-index: 5;
 }
 
 .clear-calendar {
   position: fixed;
   top: 15px;
   right: 15px;
+  z-index: 5;
+}
+
+.app-navbar {
+  height: 85px;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  z-index: 4;
+  background-color: white;
 }
 
 .cal-and-list {
@@ -30,6 +41,7 @@ body {
 }
 
 .big-cal-container {
+  margin-top: 70px;
   padding-right: 0;
 }
 
@@ -61,6 +73,16 @@ body {
   height: 72.5vh;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+.place-list-container {
+  margin-top: 70px;
+}
+
+@media screen and (max-width: 800px) {
+  .place-list-container {
+    margin-top: 20px;
+  }
 }
 
 .place-list {
