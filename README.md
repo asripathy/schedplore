@@ -30,7 +30,7 @@ POSTGRES_URI corresponds to the connection URI for your Postgres instance.
 Inside client/public/index.html, update the Google API script with your Google API Key:
 
 ```html
-      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={YOUR_GOOGLE_API_KEY}&libraries=places"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={YOUR_GOOGLE_API_KEY}libraries=places"></script>
 ```
 
 Finally, To run the app, simply run:
