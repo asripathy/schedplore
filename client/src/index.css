@@ -45,6 +45,15 @@ body {
   padding-right: 0;
 }
 
+@media screen and (max-width: 450px) {
+  .app-navbar {
+    height: 100px;
+  }
+  .big-cal-container {
+    margin-top: 90px;
+  }
+}
+
 .big-cal-container:hover {
   cursor: pointer;
 }

@@ -294,7 +294,7 @@ class App extends Component {
             <button className="btn btn-warning clear-calendar" onClick={this.clearCalendar}> Clear Calendar </button>
             <div className="app-navbar" />
             <div className="row cal-and-list">
-              <div className="big-cal-container col-md-9 col-sm-11">
+              <div className="big-cal-container col-md-9 col-sm-11 col-11">
                 <div className="big-cal">
                   <BigCalendar
                     selectable
