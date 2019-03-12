@@ -162,6 +162,7 @@ class App extends Component {
     this.setState({response: ''});
     this.setState({open_places: ''});
     this.setState({slotHighlightVisible: false});
+    this.setState({selectedType: 'food'});
     this.clearCalendar();
   }
 
