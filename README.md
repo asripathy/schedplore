@@ -1,5 +1,7 @@
 # Schedplore
 
+[Check it out here!](https://schedplore.herokuapp.com/)
+
 Schedplore allows you to discover restaurants and places to visit, and then create your own schedule through an easy and intuitive UI. Simply search for a city and then fill out your calendar!
 
 Built in Node.js (Express, PostgreSQL) with React front-end. 
