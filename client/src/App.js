@@ -132,11 +132,11 @@ class App extends Component {
       let city = this.state.address
       if (city) {
         const response = await fetch('/place/' + city);
-        if (response.status == 501) {
+        if (response.status == 500) {
           this.setState({loadingResults: false});
           this.setState({loadError: true });
         }
-        else if (response.status == 500) {
+        else if (response.status == 501) {
           this.setState({loadingResults: false});
           this.setState({noPlacesFound: true });
         }

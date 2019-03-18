@@ -261,11 +261,11 @@ function getPlacePhotos(places, callback) {
 
 function populateDB(city, places, callback) {
   if (api_key_error) {
-    callback(501);
+    callback(500);
     return;
   }
   else if (places.length == 0) {
-    callback(500);
+    callback(501);
     return;
   }
   place_ids = [];
