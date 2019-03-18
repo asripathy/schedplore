@@ -116,6 +116,10 @@ class App extends Component {
   // Tab functions
   handleTypeChange(event) {
     var type = event.currentTarget.querySelector("input").value;
+    if (this.state.selectedType != type) {
+      var placelist = document.getElementById("placelist");
+      placelist.scrollTop = 0;
+    }
     this.setState({ selectedType: type });
   }
 
@@ -373,7 +377,7 @@ class App extends Component {
                               </label>
                           </div> 
                       </div>
-                      <div className="place-list-view">
+                      <div className="place-list-view" id="placelist">
                         <PlaceList  places={this.state.open_places} updateCalendar={this.updateCalendar} selectedType={this.state.selectedType}/>
                       </div>
                     </div>
