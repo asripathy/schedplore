@@ -18,6 +18,9 @@ var Place = place(sequelize, Sequelize);
 var City = city(sequelize, Sequelize);
 var schedule = require('./controllers/schedule.js');
 
+// Error
+var api_key_error = false;
+
 //Static file declaration
 app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -38,10 +41,18 @@ app.get('/place/:place', function (req, res) {
   var place = req.params.place;
   City.getCity(place, function (city) {
     if (!city) {
-      getPlaces(res, place, () => {
-        schedule.createScheduleOptions(place, function (sched) {
-          res.send(sched);
-        });
+      getPlaces(res, place, (status) => {
+        if (status == 200) {
+          schedule.createScheduleOptions(place, function (sched) {
+            res.send(sched);
+          });
+        }
+        else if (status == 501) {
+          res.status(501).send('Google error occurred.')
+        }  
+        else if (status == 500) {
+          res.status(500).send('No places found for this city.');
+        } 
       });
     } else {
       schedule.createScheduleOptions(place, function (sched) {
@@ -57,6 +68,7 @@ app.listen(port, function () {
 
 // wrapper function for getGooglePlaces
 function getPlaces(res, city, callback) {
+  api_key_error = false;
   getGooglePlaces(res, city, 'food', [], function(restaurants) {
     getGooglePlaces(res, city, 'attraction', restaurants, function(allPlaces) {
         getPlacePhotos(allPlaces, function (placesWithPhotos) {
@@ -79,13 +91,22 @@ function getGooglePlaces(res, city, type, curPlaces, callback) {
   var url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?key=' + google_key +  '&query=' + city + searchQuery;
   https.get(url, function (resp) {
     var data = '';
-
     resp.on('data', function (chunk) {
       data += chunk;
     });
 
     resp.on('end', function () {
-      results = JSON.parse(data)['results'];
+      var parsed_data = JSON.parse(data);
+      results = parsed_data['results'];
+      if (parsed_data.status == 'ZERO_RESULTS') {
+        callback([]);
+        return;
+      }
+      if (parsed_data.status != 'OK') {
+        api_key_error = true;
+        callback([]);
+        return;
+      }
       var places = curPlaces;
       for (var i = 0; i < results.length; i++) {
         var result = results[i];
@@ -196,6 +217,9 @@ function getPlaceHours(places, callback) {
       })
     })
   });
+  if (places.length == 0) {
+    callback(newPlaces);
+  }
 }
 
 function getPlacePhotos(places, callback) {
@@ -236,6 +260,14 @@ function getPlacePhotos(places, callback) {
 }
 
 function populateDB(city, places, callback) {
+  if (api_key_error) {
+    callback(501);
+    return;
+  }
+  else if (places.length == 0) {
+    callback(500);
+    return;
+  }
   place_ids = [];
   var promises = [];
   for (let i = 0; i < places.length; i++) {
@@ -244,8 +276,7 @@ function populateDB(city, places, callback) {
     promises.push(Place.upsertPlacePromise(place.place_id, place.name, place.rating, place.address, place.lat, place.lng, place.hours, place.photo_reference, place.photo, place.type));
   }
   promises.push(City.upsertCityPromise(city, place_ids));
-
   Promise.all(promises).then(() => {
-    callback();
+    callback(200);
   });
 }

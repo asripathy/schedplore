@@ -24,7 +24,9 @@ class App extends Component {
       selectedType: 'food',
       validSearch: false,
       editingSearch: true,
-      loadingResults: false
+      loadingResults: false,
+      loadError: false,
+      noPlacesFound: false
     }
     
     this.handleTypeChange = this.handleTypeChange.bind(this);
@@ -120,17 +122,25 @@ class App extends Component {
   // Search functions
   callApi = async () => {
     this.setState({editingSearch: false});
+    this.setState({loadError: false});
     if (this.state.validSearch) {
       this.setState({loadingResults: true});
       let city = this.state.address
       if (city) {
         const response = await fetch('/place/' + city);
-        const body = await response.json();
-        if (response.status !== 200) {
-          throw Error(body.message);
+        if (response.status == 501) {
+          this.setState({loadingResults: false});
+          this.setState({loadError: true });
         }
-        this.setState({loadingResults: false});
-        this.setState({response: JSON.stringify(body)});
+        else if (response.status == 500) {
+          this.setState({loadingResults: false});
+          this.setState({noPlacesFound: true });
+        }
+        else {
+          const body = await response.json();
+          this.setState({loadingResults: false});
+          this.setState({response: JSON.stringify(body)});
+        }
       }
     }
   };
@@ -138,12 +148,16 @@ class App extends Component {
   handleChange = (address) => {
     this.setState({editingSearch: true});
     this.setState({validSearch: false});
+    this.setState({loadError: false});
+    this.setState({noPlacesFound: false});
     this.setState({ address });
   }
 
   handleSelect = (address) => {
     this.setState({editingSearch: true});
     this.setState({validSearch: true});
+    this.setState({loadError: false});
+    this.setState({noPlacesFound: false});
     this.setState({ address });
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
@@ -210,6 +224,12 @@ class App extends Component {
     let searcherrorstyles = !this.state.validSearch && !this.state.editingSearch
       ? { display: "block" }
       : { display: "none" };
+    let loaderrorstyles = this.state.loadError 
+      ? { display: "block" }
+      : { display: "none" };
+    let noplacesstyles = this.state.noPlacesFound 
+      ? { display: "block" }
+      : { display: "none" };
     let appstyles = !this.state.response 
       ? { position: "absolute",
           top: '50%',
@@ -260,6 +280,12 @@ class App extends Component {
                       </div>
                       <div className="warning-container" style={searcherrorstyles}>
                         <p className="warning-text"> Please select a city using the dropdown. </p>
+                      </div>
+                      <div className="warning-container" style={loaderrorstyles}>
+                        <p className="warning-text"> Error loading search results. Please try again. </p>
+                      </div>
+                      <div className="warning-container" style={noplacesstyles}>
+                        <p className="warning-text"> No places found for this city. </p>
                       </div>
                     </div>
                   </div>
