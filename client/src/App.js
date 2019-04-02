@@ -54,9 +54,31 @@ class App extends Component {
     this.setState({events : updatedEvents})
   }
 
+  scrollToTop = () => {
+    var placelist = document.getElementById("placelist");
+    if (placelist) {
+      placelist.scrollTop = 0;
+    }
+  }
+
+  resetSelectedType = () => {
+    var foodBtn = document.getElementById("food-btn");
+    var attractionBtn = document.getElementById("attraction-btn");
+    if (foodBtn && attractionBtn && this.state.selectedType == 'attraction') {
+      foodBtn.classList.add('active');
+      attractionBtn.classList.remove('active');
+      this.setState({ selectedType: 'food' });
+    }
+  }
+
   onSlotChange = (slotInfo) => {
     var startDate = slotInfo.start;
     var endDate = slotInfo.end;
+    if (this.state.selectedStartDate != startDate || this.state.selectedEndDate != endDate) {
+      this.scrollToTop();
+      this.resetSelectedType();
+    }
+
     this.setState({selectedStartDate: startDate});
     this.setState({selectedEndDate: endDate});
     this.setState({slotHighlightVisible: true});
@@ -117,8 +139,7 @@ class App extends Component {
   handleTypeChange(event) {
     var type = event.currentTarget.querySelector("input").value;
     if (this.state.selectedType != type) {
-      var placelist = document.getElementById("placelist");
-      placelist.scrollTop = 0;
+      this.scrollToTop();
     }
     this.setState({ selectedType: type });
   }
@@ -369,10 +390,10 @@ class App extends Component {
                       <p className="listText"> {this.generateRangeForCurentTimeSlot()}</p>
                       <div className="type-buttons row">
                           <div className="btn-group btn-group-toggle col-md-10 offset-md-1" data-toggle="buttons">
-                              <label className="btn btn-light active col-md-4" onClick={this.handleTypeChange}>
+                              <label className="btn btn-light active col-md-4" id="food-btn" onClick={this.handleTypeChange}>
                                   <input type="radio" name="placeType" value="food" autoComplete="off" checked /> <p className="tabText"> Food </p>
                               </label>
-                              <label className="btn btn-light col-md-8" onClick={this.handleTypeChange}>
+                              <label className="btn btn-light col-md-8" id="attraction-btn" onClick={this.handleTypeChange}>
                                   <input type="radio" name="placeType" value="attraction" autoComplete="off" /> <p className="tabText"> Attractions </p> 
                               </label>
                           </div> 
