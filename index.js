@@ -48,10 +48,10 @@ app.get('/place/:place', function (req, res) {
           });
         }
         else if (status == 501) {
-          res.status(501).send('Google error occurred.')
+          res.status(501).send('No places found for this city.')
         }  
         else if (status == 500) {
-          res.status(500).send('No places found for this city.');
+          res.status(500).send('Google error occurred.');
         } 
       });
     } else {
@@ -86,7 +86,7 @@ function getGooglePlaces(res, city, type, curPlaces, callback) {
   if (type == 'food') {
     searchQuery = ' restaurants';
   } else {
-    searchQuery= ' things to do'
+    searchQuery= ' things'
   }
   var url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?key=' + google_key +  '&query=' + city + searchQuery;
   https.get(url, function (resp) {
