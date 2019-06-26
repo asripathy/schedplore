@@ -99,7 +99,7 @@ function getGooglePlaces(res, city, type, curPlaces, callback) {
       var parsed_data = JSON.parse(data);
       results = parsed_data['results'];
       if (parsed_data.status == 'ZERO_RESULTS') {
-        callback([]);
+        callback(curPlaces);
         return;
       }
       if (parsed_data.status != 'OK') {
