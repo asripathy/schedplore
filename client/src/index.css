@@ -36,6 +36,13 @@ html, body {
   z-index: 5;
 }
 
+.export-calendar {
+  position: fixed;
+  top: 15px;
+  right: 155px;
+  z-index: 5;
+}
+
 .clear-calendar {
   position: fixed;
   top: 15px;

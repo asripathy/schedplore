@@ -5,6 +5,10 @@ import PlaceList from './PlaceList.js';
 import BigCalendar from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import ReactPDF from '@react-pdf/renderer';
+
 
 const localizer = BigCalendar.momentLocalizer(moment)
 
@@ -273,6 +277,38 @@ class App extends Component {
     let apptitlestyles = !this.state.response 
       ? { 'fontSize': '50px' }
       : { 'fontSize': '35px'};
+
+    // Create styles
+    const styles = StyleSheet.create({
+      page: {
+        flexDirection: 'row',
+        backgroundColor: '#E4E4E4'
+      },
+      section: {
+        margin: 1,
+        padding: 1,
+        flexGrow: 1
+      }
+    });
+    // Create Document Component
+    const MyDocument = () => (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.section}>
+            <Text>Section #1</Text>
+          </View>
+          <View style={styles.section}>
+            <Text>Section #2</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+    const App2 = () => (      
+      <PDFDownloadLink document={<MyDocument />} fileName="somename.pdf">
+        {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download')}
+      </PDFDownloadLink>
+    );
+
     return (
       <div className="App" style={appstyles}>
         <header className="App-header" style={appheaderstyles}>
@@ -342,6 +378,7 @@ class App extends Component {
         {this.state.response &&
           <div>
             <button className="btn btn-light back-button" onClick={this.clearSearch}> Back to Search </button>
+            <button className="btn btn-warning export-calendar" > <App2/> </button>
             <button className="btn btn-warning clear-calendar" onClick={this.clearCalendar}> Clear Calendar </button>
             <div className="app-navbar" />
             <div className="row cal-and-list">
@@ -360,7 +397,7 @@ class App extends Component {
                     onSelectEvent={(event) => this.onSelectEvent(event)}
                     slotPropGetter={(date) => this.slotStyleGetter(date)}
                   />
-                </div>
+                </div>                
                 <div className="modal" role="dialog" tabIndex='-1' style={modalstyles}>
                   <div className="modal-dialog event-modal">
                     <div className="modal-content">
