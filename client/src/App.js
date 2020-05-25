@@ -5,6 +5,7 @@ import PlaceList from './PlaceList.js';
 import BigCalendar from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
+import { saveAs } from 'file-saver';
 
 const localizer = BigCalendar.momentLocalizer(moment)
 
@@ -112,6 +113,31 @@ class App extends Component {
 
   clearCalendar = () => {
     this.setState({events: []});
+  }
+
+  exportCalendar = () => {
+    if (!this.state.events.length || this.state.events.length == 0) {
+      alert('Please add an event first.');
+      return;
+    }
+
+    let cal_str = `BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH`
+    
+    for (let i = 0; i < this.state.events.length; i++) {
+      let event = this.state.events[i];
+      cal_str += '\nBEGIN:VEVENT'
+      cal_str += '\nSUMMARY:' + event.title;
+      cal_str += '\nDESCRIPTION:' + event.resource.title;
+      cal_str += '\nDTSTART:' + moment(event.start).format('YYYYMMDD') + 'T' + moment(event.start).format('HHmmss');
+      cal_str += '\nDTEND:' + moment(event.end).format('YYYYMMDD')+ 'T' + moment(event.end).format('HHmmss');
+      cal_str += '\nEND:VEVENT'
+    }
+    cal_str += '\nEND:VCALENDAR';
+    
+    saveAs(new Blob([cal_str], {type: "text/calendar;charset=utf8"}), 'schedplore.ics');
   }
 
   // Event functions
@@ -343,6 +369,7 @@ class App extends Component {
           <div>
             <button className="btn btn-light back-button" onClick={this.clearSearch}> Back to Search </button>
             <button className="btn btn-warning clear-calendar" onClick={this.clearCalendar}> Clear Calendar </button>
+            <button className="btn btn-warning export-calendar" onClick={this.exportCalendar}> Export Calendar </button>
             <div className="app-navbar" />
             <div className="row cal-and-list">
               <div className="big-cal-container col-md-9 col-sm-11 col-11">
