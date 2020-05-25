@@ -43,6 +43,14 @@ html, body {
   z-index: 5;
 }
 
+.export-calendar {
+  position: fixed;
+  top: 15px;
+  right: 155px;
+  z-index: 5;
+}
+
+
 .app-navbar {
   height: 85px;
   width: 100%;
