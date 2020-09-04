@@ -39,7 +39,7 @@
     "pg-format": "^1.0.4",
     "react-big-calendar": "^0.20.3",
     "react-places-autocomplete": "^7.1.1",
-    "sequelize": "^4.33.4"
+    "sequelize": "^6.3.5"
   },
   "devDependencies": {
     "dotenv": "^6.2.0",
